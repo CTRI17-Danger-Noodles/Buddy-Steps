@@ -7,11 +7,12 @@ import { UserContext } from '../contexts/Contexts';
 export function Login() {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const { setGlobalUsername } = useContext(UserContext);
+  const { setGlobalUsername, globalUsername } = useContext(UserContext);
 
   const navigate = useNavigate();
 
   const login = async () => {
+
     try {
       const res = await fetch('/api/user/login', {
         method: 'POST',
@@ -26,10 +27,10 @@ export function Login() {
         alert('Username or Password does not exist');
       }
       if (data === 'true') {
-        navigate('/home');
         //TODO: set username here
         console.log('username: ', username);
-        setGlobalUsername(username);
+        localStorage.setItem('username', username);
+        navigate('/home')
         console.log('hey im in');
       }
     } catch (error) {

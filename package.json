@@ -5,7 +5,7 @@
   "main": "webpack.config.js",
   "scripts": {
     "build": "NODE_ENV=production webpack -w",
-    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --hot --progress --color \" \"nodemon ./server/server.js\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"nodemon ./server/server.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

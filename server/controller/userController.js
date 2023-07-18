@@ -5,6 +5,7 @@ const userController = {};
 //^ getUsers method to retrieve user info from db
 userController.getUser = (req, res, next) => {
   //? Query string pulling the id, username, password, and name from users table on the database with the username from req.query
+  console.log('Im in userController.getUser')
   const queryString =
     'SELECT id, username,password, profilepic, name FROM users WHERE username = $1';
 
@@ -30,6 +31,7 @@ userController.getUser = (req, res, next) => {
 //^ createUsers method to create a new user on the user table from the db
 userController.createUser = (req, res, next) => {
   //? Query string creating a new user by inserting id, username, password, and name into the users table on the database with the username, password, name, and profilepic from req.body
+  console.log('Im in userController.createUser')
   const queryString =
     'INSERT INTO users (username, password, name, profilepic) VALUES ($1, $2, $3, $4)';
 
@@ -39,7 +41,7 @@ userController.createUser = (req, res, next) => {
 
   //? values array initialized with variables
   const values = [username, password, name, profilepic];
-
+  
   db.query(queryString, values)
     .then((data) => {
       console.log(data.rows);
@@ -58,6 +60,7 @@ userController.createUser = (req, res, next) => {
 };
 
 userController.login = (req, res, next) => {
+  console.log('Im in userController.login')
   const { username, password } = req.body;
   //how do we search for the username in our database
   const queryString =
