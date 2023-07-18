@@ -42,3 +42,66 @@ However with this new solution you WILL need to. And the since add/delete task b
 Side Bar
 Has a bunch of random stuff you can implement
 
+# og SQL data model
+    - all tables:
+                            List of relations
+    Schema |            Name            |   Type   |  Owner   
+    --------+----------------------------+----------+----------
+    public | homies                     | table    | kvumtzjm
+    public | tasks                      | table    | kvumtzjm
+    public | users                      | table    | kvumtzjm
+    public | userstasksjointable        | table    | kvumtzjm
+
+    - homies
+                            Table "public.homies"
+    Column   |         Type          | Collation | Nullable | Default 
+    -----------+-----------------------+-----------+----------+---------
+    id        | integer               |           | not null | 
+    firstname | character varying(20) |           |          | 
+    lastname  | character varying(20) |           |          | 
+    Indexes:
+        "t_pkey" PRIMARY KEY, btree (id)
+
+    - tasks
+                                Table "public.tasks"
+    Column   |            Type             | Collation | Nullable |              Default              
+    -----------+-----------------------------+-----------+----------+-----------------------------------
+    id        | integer                     |           | not null | nextval('tasks_id_seq'::regclass)
+    task      | character varying           |           | not null | 
+    startdate | timestamp without time zone |           | not null | 
+    enddate   | timestamp without time zone |           | not null | 
+    Indexes:
+        "tasks_pkey" PRIMARY KEY, btree (id)
+    Referenced by:
+        TABLE "userstasksjointable" CONSTRAINT "userstasksjointable_taskid_fkey" FOREIGN KEY (taskid) REFERENCES tasks(id) ON DELETE CASCADE
+
+    - table users
+                                      Table "public.users"
+    Column   |       Type        | Collation | Nullable |              Default              
+    ------------+-------------------+-----------+----------+-----------------------------------
+    id         | integer           |           | not null | nextval('users_id_seq'::regclass)
+    username   | character varying |           | not null | 
+    password   | character varying |           | not null | 
+    name       | character varying |           | not null | 
+    profilepic | character varying |           |          | 
+    Indexes:
+        "users_pkey" PRIMARY KEY, btree (id)
+        "uq_username" UNIQUE CONSTRAINT, btree (username)
+    Referenced by:
+        TABLE "userstasksjointable" CONSTRAINT "userstasksjointable_userid_fkey" FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
+
+    - userstasksjointable
+                        Table "public.userstasksjointable"
+        Column    |            Type             | Collation | Nullable |                     Default                     
+    --------------+-----------------------------+-----------+----------+-------------------------------------------------
+    id           | integer                     |           | not null | nextval('userstasksjointable_id_seq'::regclass)
+    userid       | integer                     |           |          | 
+    taskid       | integer                     |           |          | 
+    taskcurrdate | timestamp without time zone |           |          | 
+    currprogress | integer                     |           |          | 
+    Indexes:
+        "userstasksjointable_pkey" PRIMARY KEY, btree (id)
+    Foreign-key constraints:
+        "userstasksjointable_taskid_fkey" FOREIGN KEY (taskid) REFERENCES tasks(id) ON DELETE CASCADE
+        "userstasksjointable_userid_fkey" FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
+
