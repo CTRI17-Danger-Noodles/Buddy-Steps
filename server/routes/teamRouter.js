@@ -3,7 +3,7 @@ const teamController = require('../controller/teamController');
 
 const router = express.Router();
 
-// get information about all tasks associated with a team
+// get information about all tasks associated with a team based on team name
 router.post('/', teamController.getTasks, (req, res) => {
   res.status(200).json(res.locals.teamTasks);
   /*
@@ -31,7 +31,7 @@ router.post('/new', teamController.createTeam, (req, res) => {
     return res.sendStatus(200);
 })
 
-// get all teams that a user is a part of
+// get all teams that a user is a part of, and also include an users array of other team members
 router.post('/current', teamController.getTeams, (req, res) => {
     return res.status(200).json(res.locals.currTeams);
     /*
@@ -40,7 +40,11 @@ router.post('/current', teamController.getTeams, (req, res) => {
         { 
           teamName:
           users: [];
-        }
+        },
+        { 
+          teamName:
+          users: [];
+        },
       ]
     */
 })

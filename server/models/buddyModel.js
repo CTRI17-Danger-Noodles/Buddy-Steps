@@ -3,12 +3,13 @@
 const { Pool } = require('pg');
 
 const PG_URI =
-  'postgres://svmfuaif:bfx-KA6snMgTmcQw5v2-21mpEtE2LnHC@mahmud.db.elephantsql.com/svmfuaif';
+  'postgres://svmfuaif:bfx-KA6snMgTmcQw5v2-21mpEtE2LnHC@mahmud.db.elephantsql.com/svmfuaif'; //buddyModel DB updated for DangerNoodle
 
 // create a new pool here using the connection string above
 const pool = new Pool({
   connectionString: PG_URI,
 });
+
 
 // We export an object that contains a property called query,
 // which is a function that returns the invocation of pool.query() after logging the query
