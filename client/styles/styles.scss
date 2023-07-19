@@ -124,6 +124,13 @@ body {
     max-width: 72px;
     border: solid 3px;
     border-radius: 16px;
+   }
+    #create-team-button {
+      filter: invert(0.04) sepia(100%) hue-rotate(180deg) brightness(300%) saturate(420%) opacity(80%);
+      max-width: 72px;
+      border: solid 3px;
+      border-radius: 16px;
+    }
   }
   //? Remove line 126 and uncomment below for a different hover effect on the complete/habits finished icon
   // .complete-span {
@@ -147,7 +154,10 @@ body {
     border: solid 3px;
     border-radius: 16px;
   }
-}
+// #scrumDiv {
+//   display: flex;
+//   justify-content: space-between;
+// }
 
 .side-buttons {
   max-width: 60px;
@@ -155,15 +165,42 @@ body {
 
 //^ Main table container/task-board where task/habbit cards are placed
 .task-board {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  margin: 0;
+  align-items: center;
+  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.progressDiv{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  height: 100%;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   justify-items: center;
+  justify-content: center;
   animation: fly-in-right 3s;
   overflow-y: scroll;
+  margin-top: 25px;
 }
+.scrumDiv{
+  border-style: solid;
+  border-radius: 25px;
+  border-width: medium;
+  height: 100%;
+  width: 90%;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  
+}
+// .scrumDiv:hover {
+//   transform: scale(1.1);
+//   cursor: pointer;
+//   transition: 0.2s ease-out;
+// }
 
 //^ Task/Habit Cards
 .task {
@@ -176,9 +213,12 @@ body {
   text-align: center;
   margin: 24px auto;
   width: 40vw;
-  min-width: 300px;
-  max-width: 450px;
-  max-height: 450px;
+  // min-width: 300px;
+  // max-width: 450px;
+  // max-height: 450px;
+  min-width: 45px;
+  max-width: 300px;
+  max-height: 300px;
   padding: 24px;
   border-radius: 14px;
   border: none;
@@ -206,7 +246,8 @@ hr {
 
 //^ Pop-up Window *Container* after clicking New Task Icon (Top-Right corner) & Edit Button in Task Cards
 .new-task-popup,
-.edit-task-popup {
+.edit-task-popup, 
+.current-teams-popup {
   position: fixed;
   top: 0;
   left: 0;
@@ -304,7 +345,17 @@ hr {
     text-align: center;
   }
 }
-
+.statusButtons{
+  display: flex;
+  flex-direction: column;
+}
+.statusButton:hover{
+  transform: scale(1.1);
+  cursor: pointer;
+  transition: 0.1s ease-out;
+  background-color: rgb(102, 191, 226);
+  color: white;
+}
 //^ Pop-up Window *Contents* after clicking Edit Button in Task Cards
 .edit-task-popup-inner {
   width: 40%;
@@ -403,4 +454,10 @@ hr {
   to {
     transform: translateX(0);
   }
+}
+
+#genreSelector {
+  // height: 30px;
+  color: black;
+  // margin-bottom: 10px;
 }

@@ -4,27 +4,35 @@ import { Task } from '../components/Task.jsx';
 import { EditTask } from '../components/EditTask.jsx';
 
 export function TaskBoard(props) {
-  const { globalUsername } = useContext(UserContext);
+  // const { globalName } = useContext(UserContext);
   const { taskData, setTaskData, areTasksChanged, setAreTasksChanged } = props;
 
   const [editPopup, setEditPopup] = useState(false);
   const [taskIndex, setTaskIndex] = useState(-1);
+  const loggedUser = localStorage.getItem('username')
 
   //& Render tasks on start up and re-render them everytime the username or task data changes
   useEffect(() => {
     // get tasks associated with username
-    async function getTasksData(globalUsername) {
-      const response = await fetch(`/api/task/?username=${globalUsername}`);
+    async function getTasksData(loggedUser) {
+      // update to post
+      const response = await fetch(`/api/task/`, {
+        method: 'POST',
+        body: {
+          // teamname
+        }
+      });
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
+      console.log('taskData line 22', taskData)
       console.log('length: ', newTaskData.length);
     }
-    console.log('printing global username in taskboard: ', globalUsername);
-    getTasksData(globalUsername);
+    console.log('printing global username in taskboard: ', loggedUser);
+    getTasksData(loggedUser);
     // set boolean to false
     setAreTasksChanged(false);
-  }, [globalUsername, areTasksChanged]);
+  }, [loggedUser, areTasksChanged]);
 
   //& When 'Add Task' button is clicked, trigger 'openTaskPopup' which changes the state of 'taskPopup' and causes the 'NewTask' component to appear
   function openEditPopup(index) {
@@ -60,7 +68,7 @@ export function TaskBoard(props) {
 
   return (
     <div className="task-board">
-      {taskData.map((task, index) => {
+      {/* {taskData.map((task, index) => {
         return (
           <Task
             task={task.task}
@@ -82,7 +90,48 @@ export function TaskBoard(props) {
         taskData={taskData}
         setTaskIndex={setTaskIndex}
         setAreTasksChanged={setAreTasksChanged}
-      />
+      /> */}
+      {/* value={progressBarValue} */}
+      
+      <progress className="progress-bar" value={taskData.length * 10} max="100" />
+      <div className= 'progressDiv'>
+        <div className="scrumDiv">
+          <h3> To Do</h3>
+          {console.log(taskData)}
+          {taskData.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
+        </div>
+        <div className="scrumDiv">
+          <h3> In Progress </h3>
+        </div>
+        <div className="scrumDiv">
+          <h3> Complete </h3>
+        </div>
+      </div>
+ 
     </div>
   );
 }

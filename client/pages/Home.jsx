@@ -14,6 +14,7 @@ export function Home(props) {
 
   // Creating boolean to notify when the TaskBoard should be refreshed
   const [areTasksChanged, setAreTasksChanged] = useState(false);
+  const [isTeamChanged, setIsTeamChanged] = useState(false);
 
   return (
     <>
@@ -24,7 +25,10 @@ export function Home(props) {
           setAreTasksChanged={setAreTasksChanged}
         />
         <div className="sidebar-taskboard-container">
-          {isSideBarShowing ? <SideContainer /> : ''}
+          {isSideBarShowing ? <SideContainer 
+            isTeamChanged={isTeamChanged}
+            setIsTeamChanged={setIsTeamChanged}
+          /> : ''}
           <TaskBoard
             taskData={taskData}
             setTaskData={setTaskData}

@@ -2,46 +2,52 @@ import React from 'react';
 import { useContext, useState } from 'react';
 import { SideContext } from '../contexts/Contexts';
 import friends from '../Assets/friends.png';
-import maps from '../Assets/maps.png';
+import addIcon from '../Assets/addIcon.png';
 import signout from '../Assets/signout.png';
-import camera from '../Assets/camera.png';
+import camera from '../Assets/newIcon.jpg';
 import complete from '../Assets/complete.png';
+import CurrentTeams from './CurrentTeams'
 
-export function SideComponent() {
-  const [friendPopUp, setFriendPopUp] = useState(false);
+export function SideComponent(props) {
+  // states pertaining to current Teams button
+  const {isTeamChanged, setIsTeamChanged} = props;
+  const [teamsPopUp, setTeamsPopUp] = useState(false);
 
-  function openFriendPopup() {
-    setFriendPopUp(true);
+  // popup opening and closing functions
+  function openTeamsPopup() {
+    setTeamsPopUp(true);
   }
 
-  function closeFriendPopup() {
-    setFriendPopUp(false);
+  function closeTeamsPopup() {
+    setTeamsPopUp(false);
   }
   function signOut() {
     window.location.href = '/';
   }
   return (
     <>
+      {/* {teamsPopUp ? (<div className='current-teams-popup'>
+        <h1>CurrentTeams</h1>
+      </div>): ('')} */}
+      <span title="Create team button">
+        <img
+          src={addIcon}
+          type="button"
+          className="side-buttons"
+          id="create-team-button"
+        />
+      </span>
+      Create a Team
       <span title="Add Friends">
         <img
           src={friends}
           type="button"
           className="side-buttons"
           id="friends-button"
-          onClick={openFriendPopup}
+          onClick={openTeamsPopup}
         />
       </span>
-      Add Friends
-      {/* {friendPopUp ? (<div>Hello</div>): ('')} */}
-      <span title="Current Location">
-        <img
-          src={maps}
-          type="button"
-          className="side-buttons"
-          id="maps-button"
-        />
-      </span>
-      Current Location
+      Current Teams
       <span title="Progress Picture">
         <img
           src={camera}
@@ -50,8 +56,8 @@ export function SideComponent() {
           id="camera-button"
         />
       </span>
-      Progress Picture
-      <span title="Completed Habits" className="complete-span">
+      Add Teammate
+      {/* <span title="Completed Habits" className="complete-span">
         <img
           src={complete}
           type="button"
@@ -59,7 +65,7 @@ export function SideComponent() {
           id="complete-button"
         />
       </span>
-      Habits Finished
+      Habits Finished */}
       <span title="Sign Out">
         <img
           src={signout}
@@ -71,6 +77,12 @@ export function SideComponent() {
         />
       </span>
       Sign Out
+      <CurrentTeams className='current-teams-popup'
+        isTeamChanged={isTeamChanged}
+        setIsTeamChanged={setIsTeamChanged}
+        teamsPopUp={teamsPopUp}
+        setTeamsPopUp={setTeamsPopUp}
+      />
     </>
   );
 }
