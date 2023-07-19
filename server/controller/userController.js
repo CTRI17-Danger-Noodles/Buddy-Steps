@@ -2,50 +2,54 @@ const db = require('../models/buddyModel');
 
 const userController = {};
 
-//^ getUsers method to retrieve user info from db
-userController.getUser = (req, res, next) => {
-  //? Query string pulling the id, username, password, and name from users table on the database with the username from req.query
-  const queryString =
-    'SELECT id, username,password, profilepic, name FROM users WHERE username = $1';
+// //^ getUsers method to retrieve user info from db
+// userController.getUser = (req, res, next) => {
+//   //? Query string pulling the id, username, password, and name from users table on the database with the username from req.query
+//   const queryString =
+//     'SELECT id, username,password, profilepic, name FROM users WHERE username = $1';
 
-  //? username intialized to desantitize data from req.query object
-  const username = req.query.username;
+//   //? username intialized to desantitize data from req.query object
+//   const username = req.query.username;
 
-  db.query(queryString, [username])
-    .then((data) => {
-      //? Data from query stored on res.locals.user to pass back to router
-      res.locals.user = data.rows[0];
+//   db.query(queryString, [username])
+//     .then((data) => {
+//       //? Data from query stored on res.locals.user to pass back to router
+//       res.locals.user = data.rows[0];
 
-      return next();
-    })
-    .catch((err) => {
-      return next({
-        status: 400,
-        log: `${err}: Error on user.Controller.getUsers`,
-        message: 'Error getting user',
-      });
-    });
-};
+//       return next();
+//     })
+//     .catch((err) => {
+//       return next({
+//         status: 400,
+//         log: `${err}: Error on user.Controller.getUsers`,
+//         message: 'Error getting user',
+//       });
+//     });
+// };
 
-//^ createUsers method to create a new user on the user table from the db
+// create a new user on the users table
 userController.createUser = (req, res, next) => {
-  //? Query string creating a new user by inserting id, username, password, and name into the users table on the database with the username, password, name, and profilepic from req.body
+  /*
+    IF res.locals.user !== false then return message 'username is already taken!'
+
+    ELSE create user in user table
+  */
+ const { username, password, profilePic } = req.body;
+ // console.log('req.body: ', req.body);
+
+  //! QUERY STRING
   const queryString =
     'INSERT INTO users (username, password, name, profilepic) VALUES ($1, $2, $3, $4)';
 
-  //? desanitized variables initialized by decontructing from the req.body object
-  const { username, password, name, profilepic } = req.body;
-  console.log('req.body: ', req.body);
-
-  //? values array initialized with variables
-  const values = [username, password, name, profilepic];
+  // values array initialized with variables
+  const values = [username, password, profilepic];
 
   db.query(queryString, values)
     .then((data) => {
       console.log(data.rows);
       //? Data from query stored on res.locals.newUser to pass back to router
       res.locals.newUser = 'created';
-
+    
       return next();
     })
     .catch((err) => {
@@ -57,9 +61,10 @@ userController.createUser = (req, res, next) => {
     });
 };
 
-userController.login = (req, res, next) => {
+// check if user exists in database
+userController.getUser = (req, res, next) => {
   const { username, password } = req.body;
-  //how do we search for the username in our database
+  //! QUERY STRING
   const queryString =
     'SELECT username, password FROM users WHERE username = $1';
   db.query(queryString, [username])
@@ -73,6 +78,10 @@ userController.login = (req, res, next) => {
       }
       console.log(res.locals.key);
       return next();
+      /*
+      res.locals.user = all info on users row
+      or false if no user with the req username exists
+      */
     })
     .catch((err) => {
       return next({
