@@ -19,6 +19,10 @@ export function TaskBoard(props) {
     // get tasks associated with username
     async function getTasksData(loggedUser) {
       // update to post
+        // localStorage.getItem('teamName')
+        // body: {
+          // teamName
+        // }
       const response = await fetch(`/api/task/?username=${loggedUser}`)
       const newTaskData = await response.json();
       // console.log(newTaskData)
