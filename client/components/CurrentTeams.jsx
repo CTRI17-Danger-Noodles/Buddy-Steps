@@ -50,6 +50,10 @@ export default function CurrentTeams(props) {
 
   const handleTeamChange = (e) => {
     console.log(e.target.value)
+    localStorage.setItem('teamName', e.target.value);
+    // trigger homepage to rerender to display newly selected 'current team'
+    // TODO - make useeffect on home page that will rerender page this state change
+    setIsTeamChanged(true);
     setTeamsPopUp(false);
   }
 
@@ -87,7 +91,7 @@ const teams = [
 const names = [];
 teams.forEach((obj) => {
     
-    names.push(<button className='team-button'>{Object.values(obj)[0]}</button>);
+    names.push(<button className='team-button' value={Object.values(obj)[0]} onClick={handleTeamChange}>{Object.values(obj)[0]}</button>);
 })
 
 //! user can update which team they are on via this pop up
@@ -100,7 +104,7 @@ teams.forEach((obj) => {
             <div className='current-teams-popup-inner'>
               <button className='back-button' onClick={handleClick}>X</button>
               <p>Current Team: {loggedTeamName}</p>
-              <button className='team-button' value={names}>{names}</button>
+              {names}
               {/* <div>{names}</div> */}
 
             </div>
