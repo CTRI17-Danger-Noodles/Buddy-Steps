@@ -20,7 +20,6 @@ export function CreateUser() {
         body: JSON.stringify({
           username: username,
           password: password,
-          name: name,
           profilepic: profilepic,
         }),
       });
@@ -88,9 +87,9 @@ export function CreateUser() {
   return (
     <div id="login-container">
       <div id="login-contents">
-        <h1>Create an Account!</h1>
+        <h1>Create a WHAKR Account!</h1>
         <hr />
-        <div className="input-container">
+        {/* <div className="input-container">
           <label>
             <h3>Name</h3>
           </label>
@@ -103,7 +102,7 @@ export function CreateUser() {
             }}
             placeholder="Your Name Here"
           ></input>
-        </div>
+        </div> */}
         <div></div>
         <div className="input-container">
           <label>

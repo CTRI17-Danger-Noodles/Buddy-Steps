@@ -4,27 +4,37 @@ import { Task } from '../components/Task.jsx';
 import { EditTask } from '../components/EditTask.jsx';
 
 export function TaskBoard(props) {
-  const { globalUsername } = useContext(UserContext);
+  // const { globalName } = useContext(UserContext);
   const { taskData, setTaskData, areTasksChanged, setAreTasksChanged } = props;
 
   const [editPopup, setEditPopup] = useState(false);
   const [taskIndex, setTaskIndex] = useState(-1);
-
+  const loggedUser = localStorage.getItem('username')
+  const toDoArr = [];
+  const inProgressArr = [];
+  const completeArr = [];
+  
   //& Render tasks on start up and re-render them everytime the username or task data changes
   useEffect(() => {
     // get tasks associated with username
-    async function getTasksData(globalUsername) {
-      const response = await fetch(`/api/task/?username=${globalUsername}`);
+    async function getTasksData(loggedUser) {
+      // update to post
+        // localStorage.getItem('teamName')
+        // body: {
+          // teamName
+        // }
+      const response = await fetch(`/api/task/?username=${loggedUser}`)
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
+      console.log('taskData line 22', taskData)
       console.log('length: ', newTaskData.length);
     }
-    console.log('printing global username in taskboard: ', globalUsername);
-    getTasksData(globalUsername);
+    console.log('printing global username in taskboard: ', loggedUser);
+    getTasksData(loggedUser);
     // set boolean to false
     setAreTasksChanged(false);
-  }, [globalUsername, areTasksChanged]);
+  }, [loggedUser, areTasksChanged]);
 
   //& When 'Add Task' button is clicked, trigger 'openTaskPopup' which changes the state of 'taskPopup' and causes the 'NewTask' component to appear
   function openEditPopup(index) {
@@ -58,31 +68,123 @@ export function TaskBoard(props) {
     }
   }
 
+  for(let i=0; i<taskData.length; i++){
+    if(taskData[i].status === 'to do'){
+      toDoArr.push(taskData[i])
+    } else if(taskData[i].status === 'in progress'){
+      inProgressArr.push(taskData[i])
+    } else completeArr.push(taskData[i])
+  }
+
+
+  inProgressArr.push({
+    enddate: "2023-07-19T21:00:43.013Z",
+    startdate: "2023-07-19T21:33:25.774Z",
+    taskID: 200,
+    task: 'testing hardcode task',
+    status: 'in progress'
+  })
+
+  // console.log('toDoArr: ', toDoArr)
+  console.log('whole Array: ', taskData)
   return (
     <div className="task-board">
-      {taskData.map((task, index) => {
-        return (
-          <Task
-            task={task.task}
-            taskID={task.taskID}
-            startdate={task.startdate}
-            enddate={task.enddate}
-            key={index}
-            index={index}
-            setTaskData={setTaskData}
-            openEditPopup={openEditPopup}
-            deleteTask={deleteTask}
+      <progress className="progress-bar" value={(completeArr.length / (completeArr.length + inProgressArr.length + toDoArr.length)) * 100} max="100" />
+      <div className= 'progressDiv'>
+        <div className="scrumDiv">
+          <h3> To Do</h3>
+          {console.log(taskData)}
+
+          {toDoArr.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
           />
-        );
-      })}
-      <EditTask
-        editPopup={editPopup}
-        closeEditPopup={closeEditPopup}
-        taskIndex={taskIndex}
-        taskData={taskData}
-        setTaskIndex={setTaskIndex}
-        setAreTasksChanged={setAreTasksChanged}
-      />
+        </div>
+
+
+        <div className="scrumDiv">
+          <h3> In Progress </h3>
+
+          {inProgressArr.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
+        </div>
+
+
+        <div className="scrumDiv">
+          <h3> Complete </h3>
+
+          {completeArr.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
+        </div>
+      </div>
+ 
     </div>
   );
 }
