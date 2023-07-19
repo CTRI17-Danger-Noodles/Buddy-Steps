@@ -15,7 +15,13 @@ export function TaskBoard(props) {
   useEffect(() => {
     // get tasks associated with username
     async function getTasksData(loggedUser) {
-      const response = await fetch(`/api/task/?username=${loggedUser}`);
+      // update to post
+      const response = await fetch(`/api/task/`, {
+        method: 'POST',
+        body: {
+          // teamname
+        }
+      });
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
