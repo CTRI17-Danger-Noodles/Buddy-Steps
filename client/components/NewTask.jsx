@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../contexts/Contexts';
+import Select from 'react-select';
 
 export function NewTask(props) {
   //   const tester = 'tester'
@@ -7,12 +8,39 @@ export function NewTask(props) {
   const { setAreTasksChanged, taskPopup, closeTaskPopup, setTaskData } = props;
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
+  const loggedUser = localStorage.getItem('username')
+  const [genre, setGenre] = useState('')
 
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
+  const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
+
+  function handleGenreSubmit(selectedOption){
+    setGenre(selectedOption)
+    console.log(genre)
+  }
+
+  // const handleGenreSubmit = async (options) => {
+  //   try {
+  //     let newGenre = options.label;
+  //     const newState = await setGenre(newGenre);
+  //     console.log('genre select:' + genre)
+  //   }
+  //   catch(err){
+  //     console.log(err)
+  //   }
+  //   // let newGenre = options.label;
+  //   // async function settingState(){
+  //   //   const newState = await setGenre(newGenre);
+  //   // }
+  //   // settingState();
+    
+  // }
+
+  
   //& Handle request on submit button
   function handleSubmit(event) {
     event.preventDefault();
@@ -30,15 +58,18 @@ export function NewTask(props) {
     async function createNewTask() {
       try {
         //TODO: check if fields are empty and return error
-        const response = await fetch(`/api/task/?username=${globalUsername}`, {
+        const response = await fetch(`/api/task/?username=${loggedUser}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             task: formData.taskName,
+            status: 'to do',
+            // genre: ,
             startDate: currDate,
             endDate: endDate,
+            // users: 
           }),
         });
 
@@ -57,6 +88,17 @@ export function NewTask(props) {
     createNewTask();
   }
 
+  const users = [];
+
+  /*
+  // fetch the users from the current team
+  fetch('/api/teamname')
+    .then((res) => res.json())
+    .then(data => {
+      data.forEach(user => users.push(user))
+    })
+  */
+
   return (
     <div>
       {taskPopup ? ( // if taskPopup is true, will render the NewTask obj. Otherwise nothing will be shown
@@ -64,7 +106,28 @@ export function NewTask(props) {
           <div className="new-task-popup-inner">
             <h2>Create a New Task</h2>
             <hr />
-
+            <div>
+                <label htmlFor = "genreSelector">
+                <h3>Select Team Members</h3>
+                </label>
+                <Select 
+                  id="userSelector"
+                  options={users}
+                  // value={genre}
+                  onChange={handleUserSubmit}
+                />
+              </div>
+            <div>
+                <label htmlFor = "genreSelector">
+                <h3>Select a Genre</h3>
+                </label>
+                <Select 
+                  id="genreSelector"
+                  options={genres}
+                  value={genre}
+                  onChange={handleGenreSubmit}
+                />
+              </div>
             <form onSubmit={handleSubmit} className="form">
               <div>
                 <label htmlFor="taskName"><h3>Task Name</h3></label>
@@ -88,6 +151,7 @@ export function NewTask(props) {
                   placeholder='Days to Complete'
                 ></input>
               </div>
+
                 <button className="new-task-submit-button">Submit</button>
                 </form>
                 <button className="new-task-close-button" onClick={closeTaskPopup}>

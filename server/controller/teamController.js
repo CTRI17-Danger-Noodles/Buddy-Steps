@@ -91,6 +91,7 @@ teamController.createTeam = (req, res, next) => {
 }
 
 teamController.getTeams = (req, res, next) => {
+
   try {
     const { username } = req.body;
 //get userId
@@ -103,6 +104,18 @@ teamController.getTeams = (req, res, next) => {
           console.log('teams and users found')
         }
     }); 
+
+
+    /*
+    res.locals.currTeams = 
+      [
+        { 
+          teamName:
+          users: [];
+        }
+      ]
+    */
+
     
 // TABLE TEAMSANDUSERS.rows = [ 
 //     { _id: 1, name: backend, username: halia}, {_id: 2, name: backend, username: ky}

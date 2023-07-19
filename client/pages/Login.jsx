@@ -7,11 +7,12 @@ import { UserContext } from '../contexts/Contexts';
 export function Login() {
   const [password, setPassword] = useState('');
   const [username, setUsername] = useState('');
-  const { setGlobalUsername } = useContext(UserContext);
+  // const { setGlobalUsername, globalUsername } = useContext(UserContext);
 
   const navigate = useNavigate();
 
   const login = async () => {
+
     try {
       const res = await fetch('/api/user/login', {
         method: 'POST',
@@ -26,14 +27,15 @@ export function Login() {
         alert('Username or Password does not exist');
       }
       if (data === 'true') {
-        navigate('/home');
         //TODO: set username here
         console.log('username: ', username);
-        setGlobalUsername(username);
+        localStorage.setItem('username', username); // must log in to set
+        localStorage.setItem('teamName', username); // must log in to set
+        navigate('/home')
         console.log('hey im in');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
@@ -48,7 +50,7 @@ export function Login() {
   return (
     <div id="login-container">
       <div id="login-contents">
-        <h1>Welcome to Buddy Step</h1>
+        <h1>Welcome to WHAKR</h1>
         <hr />
         <h2>Sign in Below</h2>
         <div className="input-container">
@@ -90,7 +92,7 @@ export function Login() {
         </button>
       </div>
       <div id="userdirect">
-        <h3>New to Buddy Step?</h3>
+        <h3>New to WHAKR?</h3>
         <a id="gobackbutton" href="./createuser">
           <h3>Sign Up Here</h3>
         </a>
