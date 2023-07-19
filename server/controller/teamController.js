@@ -28,5 +28,15 @@ teamController.getTasks = (req, res, next) => {
   */
 };
 
+teamController.createTeam = (req, res, next) => {
+    const { username, teamName } = req.body;
+
+}
+
+teamController.getTeams = (req, res, next) => {
+    const { username, teamName } = req.body;
+    
+}
+
 
 module.exports = teamController;

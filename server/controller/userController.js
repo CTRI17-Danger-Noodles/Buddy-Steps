@@ -27,6 +27,7 @@ userController.getUser = (req, res, next) => {
   //! QUERY STRING
   const queryString = '';
       /*
+      res.locals.exists = true (if user in db) or false (if user not in db)
       res.locals.user = all info on users row
       or false if no user with the req username exists
       */
