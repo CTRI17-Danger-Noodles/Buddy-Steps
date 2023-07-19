@@ -15,10 +15,10 @@ export function App() {
   const loggedUser = localStorage.getItem('username');
   console.log('localStorage username: ', loggedUser);
 
-  const [globalUsername, setGlobalUsername] = useState(loggedUser)
+  // const [globalUsername, setGlobalUsername] = useState(loggedUser)
 
   return (
-    <UserContext.Provider value={ {globalUsername, setGlobalUsername} }>
+    <UserContext.Provider value={loggedUser}>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/createuser" element={<CreateUser />} />

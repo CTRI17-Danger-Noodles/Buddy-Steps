@@ -124,6 +124,13 @@ body {
     max-width: 72px;
     border: solid 3px;
     border-radius: 16px;
+   }
+    #create-team-button {
+      filter: invert(0.04) sepia(100%) hue-rotate(180deg) brightness(300%) saturate(420%) opacity(80%);
+      max-width: 72px;
+      border: solid 3px;
+      border-radius: 16px;
+    }
   }
   //? Remove line 126 and uncomment below for a different hover effect on the complete/habits finished icon
   // .complete-span {
@@ -147,7 +154,10 @@ body {
     border: solid 3px;
     border-radius: 16px;
   }
-}
+// #scrumDiv {
+//   display: flex;
+//   justify-content: space-between;
+// }
 
 .side-buttons {
   max-width: 60px;
@@ -159,7 +169,7 @@ body {
   width: 100%;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   justify-items: center;
   animation: fly-in-right 3s;
   overflow-y: scroll;

@@ -11,6 +11,7 @@ export function Task(props) {
   const daysLeft = calcDaysLeft(newEndDate, currentDate);
   const [progressBarValue, setProgressBarValue] = useState(0);
   const { globalUsername } = useContext(UserContext);
+  const loggedUser = localStorage.getItem('username');
 
   //& Note: stretch feature we could not implement (updating progress bar)
   // //& Update progress bar on render, render every time progressBarValue changes
@@ -85,7 +86,8 @@ export function Task(props) {
       <div id="start-date">Start Date: {formattedStartDate}</div>
       <div id="end-date">End Date: {formattedEndDate}</div>
       <div id="days-left">{daysLeft}</div>
-      <progress className="progress-bar" value={progressBarValue} max="100" />
+      <div id="users">Users on Task: {daysLeft}</div>
+      {/* <progress className="progress-bar" value={progressBarValue} max="100" />
       <button
         id="allbuttons"
         className="progress-bar-progress-button"
@@ -93,7 +95,7 @@ export function Task(props) {
         index={index}
       >
         Update Progress
-      </button>
+      </button> */}
       <hr />
       <button
         id="allbuttons"
