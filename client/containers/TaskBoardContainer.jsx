@@ -84,9 +84,44 @@ export function TaskBoard(props) {
         setTaskIndex={setTaskIndex}
         setAreTasksChanged={setAreTasksChanged}
       /> */}
-      <div className="scrumDiv">To Do</div>
-      <div className="scrumDiv">In progress</div>
-      <div className="scrumDiv">Complete</div>
+      {/* value={progressBarValue} */}
+      
+      <progress className="progress-bar" value={taskData.length * 10} max="100" />
+      <div className= 'progressDiv'>
+        <div className="scrumDiv">
+          <h3> To Do</h3>
+        {taskData.map((task, index) => {
+        return (
+          <Task
+            task={task.task}
+            taskID={task.taskID}
+            startdate={task.startdate}
+            enddate={task.enddate}
+            key={index}
+            index={index}
+            setTaskData={setTaskData}
+            openEditPopup={openEditPopup}
+            deleteTask={deleteTask}
+          />
+        );
+      })}
+      <EditTask
+        editPopup={editPopup}
+        closeEditPopup={closeEditPopup}
+        taskIndex={taskIndex}
+        taskData={taskData}
+        setTaskIndex={setTaskIndex}
+        setAreTasksChanged={setAreTasksChanged}
+      />
+        </div>
+        <div className="scrumDiv">
+          <h3> In Progress </h3>
+        </div>
+        <div className="scrumDiv">
+          <h3> Complete </h3>
+        </div>
+      </div>
+ 
     </div>
   );
 }

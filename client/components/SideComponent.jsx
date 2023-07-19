@@ -51,7 +51,7 @@ export function SideComponent() {
         />
       </span>
       Add Teammate
-      <span title="Completed Habits" className="complete-span">
+      {/* <span title="Completed Habits" className="complete-span">
         <img
           src={complete}
           type="button"
@@ -59,7 +59,7 @@ export function SideComponent() {
           id="complete-button"
         />
       </span>
-      Habits Finished
+      Habits Finished */}
       <span title="Sign Out">
         <img
           src={signout}

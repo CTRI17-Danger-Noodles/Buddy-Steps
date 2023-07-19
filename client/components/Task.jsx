@@ -86,6 +86,7 @@ export function Task(props) {
       <div id="start-date">Start Date: {formattedStartDate}</div>
       <div id="end-date">End Date: {formattedEndDate}</div>
       <div id="days-left">{daysLeft}</div>
+      <div id="days-left">Genre: </div>
       <div id="users">Users on Task: {daysLeft}</div>
       {/* <progress className="progress-bar" value={progressBarValue} max="100" />
       <button
@@ -103,14 +104,14 @@ export function Task(props) {
         onClick={() => openEditPopup(index)}
         index={index}
       >
-        Edit
+        Update
       </button>
       <button
         id="allbuttons"
         className="progress-bar-delete-button"
         onClick={() => deleteTask(index)}
       >
-        Delete Habit
+        Delete Task
       </button>
     </div>
   );
