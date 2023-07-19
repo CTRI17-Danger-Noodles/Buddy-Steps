@@ -216,7 +216,8 @@ hr {
 
 //^ Pop-up Window *Container* after clicking New Task Icon (Top-Right corner) & Edit Button in Task Cards
 .new-task-popup,
-.edit-task-popup {
+.edit-task-popup, 
+.current-teams-popup {
   position: fixed;
   top: 0;
   left: 0;

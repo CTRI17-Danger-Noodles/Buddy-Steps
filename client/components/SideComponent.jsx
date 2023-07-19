@@ -6,23 +6,30 @@ import addIcon from '../Assets/addIcon.png';
 import signout from '../Assets/signout.png';
 import camera from '../Assets/newIcon.jpg';
 import complete from '../Assets/complete.png';
+import CurrentTeams from './CurrentTeams'
 
-export function SideComponent() {
-  const [friendPopUp, setFriendPopUp] = useState(false);
 
-  function openFriendPopup() {
-    setFriendPopUp(true);
+export function SideComponent(props) {
+  // states pertaining to current Teams button
+  const {isTeamChanged, setIsTeamChanged} = props;
+  const [teamsPopUp, setTeamsPopUp] = useState(false);
+
+  // popup opening and closing functions
+  function openTeamsPopup() {
+    setTeamsPopUp(true);
   }
 
-  function closeFriendPopup() {
-    setFriendPopUp(false);
+  function closeTeamsPopup() {
+    setTeamsPopUp(false);
   }
   function signOut() {
     window.location.href = '/';
   }
   return (
     <>
-      {/* {friendPopUp ? (<div>Hello</div>): ('')} */}
+      {/* {teamsPopUp ? (<div className='current-teams-popup'>
+        <h1>CurrentTeams</h1>
+      </div>): ('')} */}
       <span title="Create team button">
         <img
           src={addIcon}
@@ -38,7 +45,7 @@ export function SideComponent() {
           type="button"
           className="side-buttons"
           id="friends-button"
-          onClick={openFriendPopup}
+          onClick={openTeamsPopup}
         />
       </span>
       Current Teams
@@ -71,6 +78,12 @@ export function SideComponent() {
         />
       </span>
       Sign Out
+      <CurrentTeams 
+        isTeamChanged={isTeamChanged}
+        setIsTeamChanged={setIsTeamChanged}
+        teamsPopUp={teamsPopUp}
+        setTeamsPopUp={setTeamsPopUp}
+      />
     </>
   );
 }
