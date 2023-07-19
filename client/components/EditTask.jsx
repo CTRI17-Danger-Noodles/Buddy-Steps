@@ -75,12 +75,41 @@ export function EditTask(props) {
     }
   }
 
+  const toDoClickHandler = () => {
+    console.log('working')
+    fetch('/api/task', {
+      method: PATCH,
+      body: {
+        // status_id updated to match the status_id of toDo
+      }
+    })
+  }
+
+  const inProgressClickHandler = () => {
+    fetch('/api/task', {
+      method: PATCH,
+      body: {
+        // status_id updated to match the status_id of inProgress
+      }
+    })
+  }
+
+  const completeClickHandler = () => {
+    fetch('/api/task', {
+      method: PATCH,
+      body: {
+        // status_id updated to match the status_id of complete
+      }
+    })
+  }
+
+
   return (
     <div>
       {editPopup ? (
         <div className="new-task-popup">
           <div className="new-task-popup-inner">
-            <h2>Edit Your Task</h2>
+            <h2>Update Your Task</h2>
             <hr />
             <form onSubmit={handleSubmit} className="form">
               <div>
@@ -107,8 +136,15 @@ export function EditTask(props) {
                   />
                 </div>
               </div>
+
               <button className="new-task-submit-button">Submit</button>
             </form>
+            <label htmlFor="statusButtons"><h3>Move Status</h3></label>
+              <div className='statusButtons'>
+                  <button className='statusButton' id='todoButton' onClick={toDoClickHandler}> To Do</button>
+                  <button className='statusButton' id='progressButton' onClick={inProgressClickHandler}> In Progress</button>
+                  <button className='statusButton' id='completeButton' onClick={completeClickHandler}> Complete</button>
+              </div>
             <button className="new-task-close-button" onClick={closeEditPopup}>
               x
             </button>

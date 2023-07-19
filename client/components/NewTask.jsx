@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../contexts/Contexts';
+import Select from 'react-select';
 
 export function NewTask(props) {
   //   const tester = 'tester'
@@ -8,12 +9,22 @@ export function NewTask(props) {
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
   const loggedUser = localStorage.getItem('username')
+  const [genre, setGenre] = useState('')
 
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
+  const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
+
+  const handleGenreSubmit = (options) => {
+    let newGenre = options.label;
+    setGenre(newGenre);
+    console.log('genre select:' + genre)
+  }
+
+  
   //& Handle request on submit button
   function handleSubmit(event) {
     event.preventDefault();
@@ -38,6 +49,8 @@ export function NewTask(props) {
           },
           body: JSON.stringify({
             task: formData.taskName,
+            status: 'to do',
+            // genre: ,
             startDate: currDate,
             endDate: endDate,
           }),
@@ -57,6 +70,8 @@ export function NewTask(props) {
     }
     createNewTask();
   }
+
+
 
   return (
     <div>
@@ -88,6 +103,16 @@ export function NewTask(props) {
                   onChange={handleChange}
                   placeholder='Days to Complete'
                 ></input>
+              </div>
+              <div>
+                <label htmlFor = "genreSelector">
+                <h3>Select a Genre</h3>
+                </label>
+                <Select 
+                  id="genreSelector"
+                  options={genres}
+                  onChange={handleGenreSubmit}
+                />
               </div>
                 <button className="new-task-submit-button">Submit</button>
                 </form>

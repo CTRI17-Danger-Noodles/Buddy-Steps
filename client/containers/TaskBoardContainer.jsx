@@ -15,10 +15,17 @@ export function TaskBoard(props) {
   useEffect(() => {
     // get tasks associated with username
     async function getTasksData(loggedUser) {
-      const response = await fetch(`/api/task/?username=${loggedUser}`);
+      // update to post
+      const response = await fetch(`/api/task/`, {
+        method: 'POST',
+        body: {
+          // teamname
+        }
+      });
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
+      console.log('taskData line 22', taskData)
       console.log('length: ', newTaskData.length);
     }
     console.log('printing global username in taskboard: ', loggedUser);
@@ -84,9 +91,47 @@ export function TaskBoard(props) {
         setTaskIndex={setTaskIndex}
         setAreTasksChanged={setAreTasksChanged}
       /> */}
-      <div className="scrumDiv">To Do</div>
-      <div className="scrumDiv">In progress</div>
-      <div className="scrumDiv">Complete</div>
+      {/* value={progressBarValue} */}
+      
+      <progress className="progress-bar" value={taskData.length * 10} max="100" />
+      <div className= 'progressDiv'>
+        <div className="scrumDiv">
+          <h3> To Do</h3>
+          {console.log(taskData)}
+          {taskData.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
+        </div>
+        <div className="scrumDiv">
+          <h3> In Progress </h3>
+        </div>
+        <div className="scrumDiv">
+          <h3> Complete </h3>
+        </div>
+      </div>
+ 
     </div>
   );
 }
