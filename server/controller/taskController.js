@@ -4,171 +4,153 @@ const db = require('../models/buddyModel');
 // controller object holding all methods.
 const taskController = {};
 
-// Modular error creator:
-const createErr = (errInfo) => {
-  return {
-    log: errInfo,
-    message: {
-      err: `taskController error: Incorrect data received.`,
-    },
-  };
-};
-
-// method to get all the user data.
-taskController.getTaskData = async function (req, res, next) {
-  try {
-    // joining our user's task table id to match the foreign keys with the task table to get that user's specific tasks. Searching for a dynamic value based off the username.
-    const queryString = {
-      text: `SELECT tasks.id AS "taskID", tasks.task, tasks.startDate, tasks.endDate 
-      FROM UsersTasksJoinTable
-      RIGHT JOIN Users
-      ON UsersTasksJoinTable.userId = Users.id
-      RIGHT JOIN Tasks
-      ON UsersTasksJoinTable.taskId = Tasks.id
-      WHERE users.username = $1;`,
-      values: [req.query.username],
-    };
-    const result = await db.query(queryString);
-    res.locals.taskData = result.rows;
-    return next();
-  } catch (error) {
-    const newErr = createErr(error);
-    return next(newErr);
-  }
-};
-
 //add the task to the task to table
 //link the userid and the task in the task in the table.
 taskController.createTask = async function (req, res, next) {
   try {
-    // destructuring the task, startDate and endDate from req.body
-    const { task, startDate, endDate } = req.body;
-    const currentUser = req.query.username;
+  // destructuring all info about new task 
+  // *Note: users will be an array of usernames
+  const { name, genre, status, startDate, endDate, users } = req.body;
+  // teamName provided through req.query
+  const teamName = req.query.teamName;
+  
+  //get the genre id,
+  //get the status id,
+  const queryString = `INSERT INTO task (name, genre_id, status_id, start_date, end_date) 
+  VALUES ($1,
+  (SELECT _id FROM genres WHERE genre = $2),
+  (SELECT _id FROM status WHERE type = $3),
+  $4,
+  $5)`
 
-    // get the user id from the users table
-    const foundUser = await db.query(
-      `SELECT id FROM users WHERE username= $1;`,
-      [currentUser]
-    );
-    const userId = foundUser.rows[0].id;
+  const values = [name, genre, status, startDate, endDate]
 
-    // querying to create a new task in the tasks table.
-    const newTaskQuery = {
-      text: `
-      INSERT INTO tasks (task, startDate, endDate)
-      VALUES ($1, $2, $3)
-      RETURNING tasks.id;
-      `,
-      values: [task, startDate, endDate],
-    };
-    const newTask = await db.query(newTaskQuery);
+  const addedRow = await db.query(queryString, values, (err, res) => {
+    if (err) {
+      console.log('failed to create task')
+    } else {
+      console.log('task created!')
+    }
+  })
 
-    // assigning the newly inserted documents id to newTaskId
-    const newTaskId = newTask.rows[0].id;
+  const taskId = addedRow[0]._id
 
-    // this query is going to insert the current user id and the newly created taskid so that they can be connected in the join table.
-    const joinTableQuery = {
-      text: `
-      INSERT INTO userstasksjointable (userId, taskid, currprogress)
-      VALUES ($1, $2, $3);
-      `,
-      values: [userId, newTaskId, 0],
-    };
-    res.locals.newTaskId = newTaskId;
-    await db.query(joinTableQuery);
-    return next();
-  } catch (error) {
-    const newErr = createErr(error);
-    return next(newErr);
+  // const queryTask = `SELECT _id FROM task WHERE name=$1`
+
+  // //find id from this task
+  // const taskId = db.query(queryTask, name, (err, res) => {
+  //   if (err) {
+  //     console.log('failed to retrieve task id')
+  //   } else {
+  //     console.log(`task id received!`)
+  //   }
+
+
+  // in task_user table, add this task_id with each user_id
+  let taskCounter = 1
+  let userCounter = 2
+  let queryConcatStr = ''
+  const toAddValues = []; //taskId, halia, taskId, kyle, taskid, rylie
+  users.forEach(el => {
+    queryConcatStr += `INSERT INTO task_user (task_id, user_id) VALUES (${taskCounter}, (SELECT _id FROM users WHERE username = ${userCounter}))`
+    toAddValues.push(...[taskId, el])
+    taskCounter+=2,
+    userCounter+=2
+  })
+
+  db.query(queryConcatStr, toAddValues, (err, res) => {
+    if (err) {
+      console.log('failed to create task with users')
+    } else {
+      console.log('task with users created!')
+    }
+  })
+  return next();
+  } catch (err) {
+    return next({
+      log: `taskController.createTask ERROR: ` + err,
+      message: {
+        err: `trouble creating task`,
+      },
+    });
   }
-};
+}; 
+
+
 
 taskController.updateTask = async function (req, res, next) {
   try {
-    // pulling username from the query parameter in the url.
-    const taskIdToBeUpdated = req.query.taskId;
-
-    // pulling task from
-    const updatedTask = req.body.updatedTask;
-    const updatedEndTime = req.body.updatedEndTime;
-    let updatedId;
-
-    // query to update the task specific to that user.
-    if (!updatedEndTime) {
-      const updateTaskQuery = `
-        UPDATE tasks
-        SET task = $1
-        WHERE id = $2
-        RETURNING id;
-      `;
-
-      // assigning the updated task id to variable updated once done.
-      updatedId = await db.query(updateTaskQuery, [
-        updatedTask,
-        taskIdToBeUpdated,
-      ]);
-
-      // query to update the end time specific to that user.
-    } else if (!updatedTask) {
-      const updateTimeQuery = `
-        UPDATE tasks
-        SET enddate = $1
-        WHERE id = $2
-        RETURNING id;
-      `;
-
-      // assigning the updated task id to variable updated once done.
-      updatedId = await db.query(updateTimeQuery, [
-        updatedEndTime,
-        taskIdToBeUpdated,
-      ]);
-
-      // query to update both task name and end time specific to that user.
-    } else if (updatedTask && updatedEndTime) {
-      const updateTaskAndTimeQuery = `
-        UPDATE tasks
-        SET task = $1, enddate = $2 
-        WHERE id = $3
-        RETURNING id;
-      `;
-
-      // assigning the updated task id to variable updated once done.
-      updatedId = await db.query(updateTaskAndTimeQuery, [
-        updatedTask,
-        updatedEndTime,
-        taskIdToBeUpdated,
-      ]);
+  // destructuring all info about new task 
+  // *Note: users will be an array of usernames
+  const { name, genre, status, startDate, endDate, users } = req.body;
+  // teamName provided through req.query
+  const teamName = req.query.teamName;
+  // find the task by it's name
+  const queryTask = `SELECT _id FROM task WHERE name=$1`
+  //find id from this task
+  const taskId = db.query(queryTask, name, (err, res) => {
+    if (err) {
+      console.log('failed to retrieve task id to update')
+    } else {
+      console.log(`task id received to update!`)
     }
+  })
 
-    // sending back updated task id to confirm it was updated.
-    res.locals.updatedTaskId = updatedId.rows[0].id;
-    return next();
-  } catch (error) {
-    const newErr = createErr(error);
-    return next(newErr);
-  }
+  // update the task 
+  const updateTaskQ = `UPDATE task SET name = $1, genre_id = (SELECT _id FROM genre WHERE genre = $2), status_id = (SELECT _id FROM status WHERE status = $3), start_date = $4, end_date = $5 WHERE _id=$6`
+  
+  const values = [name, genre, status, startDate, endDate, taskId];
+
+  db.query(updateTaskQ, values, (err, res) => {
+    if (err) {
+      console.log('failed to update task')
+    } else {
+      console.log(`task updated!`)
+    }
+  })
+
+  let taskCounter = 1
+  let userCounter = 2
+  let queryConcatStr = ''
+  const toAddValues = []; //taskId, halia, taskId, kyle, taskid, rylie
+  users.forEach(el => {
+    queryConcatStr += `INSERT INTO task_user (task_id, user_id) VALUES (${taskCounter}, (SELECT _id FROM users WHERE username = ${userCounter}))`
+    toAddValues.push(...[taskId, el])
+    taskCounter+=2,
+    userCounter+=2
+  })
+
+  db.query(queryConcatStr, toAddValues, (err, res) => {
+    if (err) {
+      console.log('failed to update tasks with new users')
+    } else {
+      console.log('task updated with new users!')
+    }
+  })
+} catch (err) {
+  return next({
+    log: `taskController.updateTask ERROR: ` + err,
+    message: {
+      err: `trouble updating task`,
+    },
+  });
+}
 };
 
+
 taskController.deleteTask = async function (req, res, next) {
-  try {
-    // grabbing the taskId from the query parameter
-    const currentTaskId = req.query.taskId;
+  // retrieve task name and teamName
+  const { name } = req.body;
+  const teamName = req.query.teamName;
+  // find taskId
+  // delete from task_user where task_id = taskId
 
-    // query to delete the task where the task id matches
-    const deleteQuery = `
-    DELETE FROM tasks
-    WHERE id = $1
-    RETURNING id;
-    `;
 
-    // assinging the deleted id to deleted to confirm the id was deleted.
-    const deleted = await db.query(deleteQuery, [currentTaskId]);
-    res.locals.deleted = deleted.rows[0].id;
-    return next();
-  } catch (error) {
-    const newErr = createErr(error);
-    return next(newErr);
-  }
+  // delete from task where id = task_id
+
+  // delete from board where task_id = id
+
+  
 };
 
 module.exports = taskController;
