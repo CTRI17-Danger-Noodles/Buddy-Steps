@@ -40,7 +40,7 @@ userController.createUser = (req, res, next) => {
   const queryString = '';
 
   //? values array initialized with variables
-  const values = [username, password, name, profilepic];
+  const values = [username, password, profilepic];
   
   db.query(queryString, values)
     .then((data) => {

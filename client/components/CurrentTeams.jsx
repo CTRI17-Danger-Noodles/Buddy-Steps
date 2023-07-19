@@ -44,6 +44,15 @@ export default function CurrentTeams(props) {
     }
   }
 
+  const handleClick = () => {
+    setTeamsPopUp(false);
+  }
+
+  const handleTeamChange = (e) => {
+    console.log(e.target.value)
+    setTeamsPopUp(false);
+  }
+
 //   getTeams();
 
 
@@ -66,7 +75,7 @@ export default function CurrentTeams(props) {
 const loggedTeam = {
     teamName: 'fettucine'
 }
-const loggedTeamName = Object.keys(loggedTeam)
+const loggedTeamName = Object.values(loggedTeam)[0];
 const teams = [
     {
         teamName: 'gouda'
@@ -77,7 +86,8 @@ const teams = [
 ]
 const names = [];
 teams.forEach((obj) => {
-    names.push(obj[0]);
+    
+    names.push(<button className='team-button'>{Object.values(obj)[0]}</button>);
 })
 
 //! user can update which team they are on via this pop up
@@ -86,9 +96,14 @@ teams.forEach((obj) => {
 {/* if current teams button is clicked, the teamsPopUp state will be set to true which will cause the below operator to render the pop up */}
   if (teamsPopUp) {
     return (
-        <div className='current-teams-popup-inner'>
-          <p>Current Team: {loggedTeamName}</p>
-            <button className='team-button'>{names}</button>
+        <div className='current-teams-popup'>
+            <div className='current-teams-popup-inner'>
+              <button className='back-button' onClick={handleClick}>X</button>
+              <p>Current Team: {loggedTeamName}</p>
+              <button className='team-button' value={names}>{names}</button>
+              {/* <div>{names}</div> */}
+
+            </div>
         </div>
 
     );
