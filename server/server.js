@@ -6,7 +6,7 @@ const PORT = 3000;
 
 const userRouter = require('./routes/userRouter');
 const taskRouter = require('./routes/taskRouter');
-const progressRouter = require('./routes/progressRouter');
+const teamRouter = require('./routes/teamRouter');
 
 // including cookies, urlencoder, and express.json
 app.use(cookieParser());
@@ -16,14 +16,13 @@ app.use(express.urlencoded());
 // if we need to serve any static files, serve them here:
 app.use('/Assets',express.static(path.resolve(__dirname, '../client/assets')));
 // insert routes here, please specify specific routes / what they will do:
-//GOES TO USER ROUTER
+
+// ROUTERS
 app.use('/api/user', userRouter);
-
-//GOES TO TASK ROUTER
 app.use('/api/task', taskRouter);
+app.use('/api/team', teamRouter);
 
-//GOES TO PROGRESS ROUTER
-app.use('/api/progress', progressRouter);
+
 
 // catch all error handler
 app.use('/', (req, res) => {
