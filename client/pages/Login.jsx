@@ -35,7 +35,7 @@ export function Login() {
         console.log('hey im in');
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 

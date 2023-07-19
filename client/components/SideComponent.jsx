@@ -8,7 +8,6 @@ import camera from '../Assets/newIcon.jpg';
 import complete from '../Assets/complete.png';
 import CurrentTeams from './CurrentTeams'
 
-
 export function SideComponent(props) {
   // states pertaining to current Teams button
   const {isTeamChanged, setIsTeamChanged} = props;
@@ -78,7 +77,7 @@ export function SideComponent(props) {
         />
       </span>
       Sign Out
-      <CurrentTeams 
+      <CurrentTeams className='current-teams-popup'
         isTeamChanged={isTeamChanged}
         setIsTeamChanged={setIsTeamChanged}
         teamsPopUp={teamsPopUp}
