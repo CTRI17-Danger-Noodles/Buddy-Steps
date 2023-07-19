@@ -10,18 +10,16 @@ export function TaskBoard(props) {
   const [editPopup, setEditPopup] = useState(false);
   const [taskIndex, setTaskIndex] = useState(-1);
   const loggedUser = localStorage.getItem('username')
-
+  const toDoArr = [];
+  const inProgressArr = [];
+  const completeArr = [];
+  
   //& Render tasks on start up and re-render them everytime the username or task data changes
   useEffect(() => {
     // get tasks associated with username
     async function getTasksData(loggedUser) {
       // update to post
-      const response = await fetch(`/api/task/`, {
-        method: 'POST',
-        body: {
-          // teamname
-        }
-      });
+      const response = await fetch(`/api/task/?username=${loggedUser}`)
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
@@ -66,39 +64,34 @@ export function TaskBoard(props) {
     }
   }
 
+  for(let i=0; i<taskData.length; i++){
+    if(taskData[i].status === 'to do'){
+      toDoArr.push(taskData[i])
+    } else if(taskData[i].status === 'in progress'){
+      inProgressArr.push(taskData[i])
+    } else completeArr.push(taskData[i])
+  }
+
+
+  inProgressArr.push({
+    enddate: "2023-07-19T21:00:43.013Z",
+    startdate: "2023-07-19T21:33:25.774Z",
+    taskID: 200,
+    task: 'testing hardcode task',
+    status: 'in progress'
+  })
+
+  // console.log('toDoArr: ', toDoArr)
+  console.log('whole Array: ', taskData)
   return (
     <div className="task-board">
-      {/* {taskData.map((task, index) => {
-        return (
-          <Task
-            task={task.task}
-            taskID={task.taskID}
-            startdate={task.startdate}
-            enddate={task.enddate}
-            key={index}
-            index={index}
-            setTaskData={setTaskData}
-            openEditPopup={openEditPopup}
-            deleteTask={deleteTask}
-          />
-        );
-      })}
-      <EditTask
-        editPopup={editPopup}
-        closeEditPopup={closeEditPopup}
-        taskIndex={taskIndex}
-        taskData={taskData}
-        setTaskIndex={setTaskIndex}
-        setAreTasksChanged={setAreTasksChanged}
-      /> */}
-      {/* value={progressBarValue} */}
-      
-      <progress className="progress-bar" value={taskData.length * 10} max="100" />
+      <progress className="progress-bar" value={(completeArr.length / (completeArr.length + inProgressArr.length + toDoArr.length)) * 100} max="100" />
       <div className= 'progressDiv'>
         <div className="scrumDiv">
           <h3> To Do</h3>
           {console.log(taskData)}
-          {taskData.map((task, index) => {
+
+          {toDoArr.map((task, index) => {
             return (
               <Task
                 task={task.task}
@@ -124,11 +117,67 @@ export function TaskBoard(props) {
             setAreTasksChanged={setAreTasksChanged}
           />
         </div>
+
+
         <div className="scrumDiv">
           <h3> In Progress </h3>
+
+          {inProgressArr.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
         </div>
+
+
         <div className="scrumDiv">
           <h3> Complete </h3>
+
+          {completeArr.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
+          />
         </div>
       </div>
  
