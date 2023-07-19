@@ -9,12 +9,22 @@ export function NewTask(props) {
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
   const loggedUser = localStorage.getItem('username')
+  const [genre, setGenre] = useState('')
 
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
+  const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
+
+  const handleGenreSubmit = (options) => {
+    let newGenre = options.label;
+    setGenre(newGenre);
+    console.log('genre select:' + genre)
+  }
+
+  
   //& Handle request on submit button
   function handleSubmit(event) {
     event.preventDefault();
@@ -39,7 +49,7 @@ export function NewTask(props) {
           },
           body: JSON.stringify({
             task: formData.taskName,
-            status: 1,
+            status: 'to do',
             // genre: ,
             startDate: currDate,
             endDate: endDate,
@@ -61,11 +71,7 @@ export function NewTask(props) {
     createNewTask();
   }
 
-  const handleGenreSubmit = () => {
 
-  }
-
-  const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
 
   return (
     <div>

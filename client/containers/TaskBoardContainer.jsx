@@ -19,6 +19,7 @@ export function TaskBoard(props) {
       const newTaskData = await response.json();
       // console.log(newTaskData)
       setTaskData(newTaskData);
+      console.log('taskData line 22', taskData)
       console.log('length: ', newTaskData.length);
     }
     console.log('printing global username in taskboard: ', loggedUser);
@@ -90,29 +91,32 @@ export function TaskBoard(props) {
       <div className= 'progressDiv'>
         <div className="scrumDiv">
           <h3> To Do</h3>
-        {taskData.map((task, index) => {
-        return (
-          <Task
-            task={task.task}
-            taskID={task.taskID}
-            startdate={task.startdate}
-            enddate={task.enddate}
-            key={index}
-            index={index}
-            setTaskData={setTaskData}
-            openEditPopup={openEditPopup}
-            deleteTask={deleteTask}
+          {console.log(taskData)}
+          {taskData.map((task, index) => {
+            return (
+              <Task
+                task={task.task}
+                taskID={task.taskID}
+                startdate={task.startdate}
+                enddate={task.enddate}
+                key={index}
+                index={index}
+                status={task.status}
+                genre={task.genre}
+                setTaskData={setTaskData}
+                openEditPopup={openEditPopup}
+                deleteTask={deleteTask}
+              />
+            );
+          })}
+          <EditTask
+            editPopup={editPopup}
+            closeEditPopup={closeEditPopup}
+            taskIndex={taskIndex}
+            taskData={taskData}
+            setTaskIndex={setTaskIndex}
+            setAreTasksChanged={setAreTasksChanged}
           />
-        );
-      })}
-      <EditTask
-        editPopup={editPopup}
-        closeEditPopup={closeEditPopup}
-        taskIndex={taskIndex}
-        taskData={taskData}
-        setTaskIndex={setTaskIndex}
-        setAreTasksChanged={setAreTasksChanged}
-      />
         </div>
         <div className="scrumDiv">
           <h3> In Progress </h3>

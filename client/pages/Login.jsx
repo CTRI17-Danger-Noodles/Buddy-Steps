@@ -29,7 +29,8 @@ export function Login() {
       if (data === 'true') {
         //TODO: set username here
         console.log('username: ', username);
-        localStorage.setItem('username', username);
+        localStorage.setItem('username', username); // must log in to set
+        localStorage.setItem('teamName', username); // must log in to set
         navigate('/home')
         console.log('hey im in');
       }
