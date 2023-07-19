@@ -108,6 +108,8 @@ userController.getUser = (req, res, next) => {
 }
 };
 
+
+
 // check if the user's password matches the one stored in db
 userController.checkPassword = (req, res, next) => {
   try {
