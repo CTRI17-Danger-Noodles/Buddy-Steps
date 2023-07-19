@@ -105,3 +105,67 @@ Has a bunch of random stuff you can implement
         "userstasksjointable_taskid_fkey" FOREIGN KEY (taskid) REFERENCES tasks(id) ON DELETE CASCADE
         "userstasksjointable_userid_fkey" FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE
 
+DRAGON NOODLE
+SQL RECREATION:
+
+CREATE TABLE users (
+_id SERIAL PRIMARY KEY,
+username VARCHAR(25) NOT NULL,
+password VARCHAR(50) NOT NULL,
+profilePic BYTEA
+)
+
+CREATE TABLE teams (
+_id SERIAL PRIMARY KEY,
+name VARCHAR(50),
+user_id INT
+);
+ALTER TABLE teams
+add constraint fk_teams_users //constraining the tables to each other (team is dependent on users)
+foreign key (user_id)
+REFERENCES users (_id); // user_id is a reference to id in users table
+
+CREATE TABLE genres (
+_id SERIAL PRIMARY KEY,
+genre VARCHAR(50) not null
+);
+INSERT INTO genres(genre) 
+VALUES ('work'), ('personal'), ('fitness'), ('hobby'), ('spiritual');
+
+CREATE TABLE status (
+_id SERIAL PRIMARY KEY,
+type VARCHAR(50) not null
+);
+INSERT INTO status(type) 
+VALUES ('to do'), ('in progress'), ('complete');
+
+ALTER TABLE task
+add constraint fk_task_genre
+foreign key (genre_id)
+REFERENCES genres (_id);
+
+ALTER TABLE task
+add constraint status
+foreign key (status_id)
+REFERENCES status (_id);
+
+CREATE TABLE board (
+team_id INT,
+task_id INT
+);
+
+ALTER TABLE board
+add constraint fk_board_teams
+foreign key (team_name)
+REFERENCES teams (name)
+
+ALTER TABLE board
+add constraint fk_board_task
+foreign key (task_id)
+REFERENCES task (_id)
+
+CREATE TABLE task_user (
+task_id INT,
+user_id INT
+);
+
