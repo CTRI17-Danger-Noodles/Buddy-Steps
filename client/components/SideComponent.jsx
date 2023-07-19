@@ -2,9 +2,9 @@ import React from 'react';
 import { useContext, useState } from 'react';
 import { SideContext } from '../contexts/Contexts';
 import friends from '../Assets/friends.png';
-import maps from '../Assets/maps.png';
+import addIcon from '../Assets/addIcon.png';
 import signout from '../Assets/signout.png';
-import camera from '../Assets/camera.png';
+import camera from '../Assets/newIcon.jpg';
 import complete from '../Assets/complete.png';
 
 export function SideComponent() {
@@ -22,6 +22,16 @@ export function SideComponent() {
   }
   return (
     <>
+      {/* {friendPopUp ? (<div>Hello</div>): ('')} */}
+      <span title="Create team button">
+        <img
+          src={addIcon}
+          type="button"
+          className="side-buttons"
+          id="create-team-button"
+        />
+      </span>
+      Create a Team
       <span title="Add Friends">
         <img
           src={friends}
@@ -31,17 +41,7 @@ export function SideComponent() {
           onClick={openFriendPopup}
         />
       </span>
-      Add Friends
-      {/* {friendPopUp ? (<div>Hello</div>): ('')} */}
-      <span title="Current Location">
-        <img
-          src={maps}
-          type="button"
-          className="side-buttons"
-          id="maps-button"
-        />
-      </span>
-      Current Location
+      Current Teams
       <span title="Progress Picture">
         <img
           src={camera}
@@ -50,7 +50,7 @@ export function SideComponent() {
           id="camera-button"
         />
       </span>
-      Progress Picture
+      Add Teammate
       <span title="Completed Habits" className="complete-span">
         <img
           src={complete}

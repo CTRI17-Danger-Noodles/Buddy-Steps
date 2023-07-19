@@ -4,7 +4,7 @@ import { NewTask } from '../components/NewTask.jsx';
 import Icon from '../Assets/Icon.png';
 
 export function HeaderContainer(props) {
-  const { globalUsername } = useContext(UserContext);
+  // const { globalUsername } = useContext(UserContext);
   const { isSideBarShowing, setIsSideBarShowing } = useContext(SideContext);
   const { setTaskData, setAreTasksChanged } = props;
 
@@ -12,11 +12,12 @@ export function HeaderContainer(props) {
   const [taskPopup, setTaskPopup] = useState(false);
   const [profile, setProfilePic] = useState('');
   const [name, setName] = useState('');
+  const loggedUser = localStorage.getItem('username')
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const res = await fetch(`/api/user/?username=${globalUsername}`);
+        const res = await fetch(`/api/user/?username=${loggedUser}`);
         const data = await res.json();
         setProfilePic(data.profilepic);
         setName(data.name);
@@ -57,7 +58,7 @@ export function HeaderContainer(props) {
           onClick={showSideBar}
         />
         <h1>
-          Welcome {name}
+          {loggedUser}'s Team Homepage
           <br />
           Here are your Current Habits:{' '}
         </h1>

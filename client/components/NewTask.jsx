@@ -7,6 +7,7 @@ export function NewTask(props) {
   const { setAreTasksChanged, taskPopup, closeTaskPopup, setTaskData } = props;
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
+  const loggedUser = localStorage.getItem('username')
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -30,7 +31,7 @@ export function NewTask(props) {
     async function createNewTask() {
       try {
         //TODO: check if fields are empty and return error
-        const response = await fetch(`/api/task/?username=${globalUsername}`, {
+        const response = await fetch(`/api/task/?username=${loggedUser}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
