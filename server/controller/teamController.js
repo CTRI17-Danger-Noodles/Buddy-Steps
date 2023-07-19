@@ -34,7 +34,17 @@ teamController.createTeam = (req, res, next) => {
 }
 
 teamController.getTeams = (req, res, next) => {
-    const { username, teamName } = req.body;
+    const { username } = req.body;
+
+    /*
+    res.locals.currTeams = 
+      [
+        { 
+          teamName:
+          users: [];
+        }
+      ]
+    */
     
 }
 
