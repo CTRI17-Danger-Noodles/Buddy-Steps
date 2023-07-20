@@ -22,11 +22,13 @@ export function Login() {
         body: JSON.stringify({ username: username, password: password }),
       });
       const data = await res.json();
-      if (data === 'false') {
+      console.log('login line 25')
+      console.log(data)
+      if (typeof data !== "object") {
         // 'error' will be sent back in the backend
         alert('Username or Password does not exist');
       }
-      if (data === 'true') {
+      else {
         //TODO: set username here
         console.log('username: ', username);
         localStorage.setItem('username', username); // must log in to set

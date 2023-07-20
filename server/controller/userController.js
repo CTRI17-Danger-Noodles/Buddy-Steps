@@ -4,25 +4,46 @@ const userController = {};
 
 //^ createUsers method to create a new user on the user table from the db
 // create a new user on the users table
-userController.createUser = (req, res, next) => {
+userController.createUser = async (req, res, next) => {
   try {
+    // if user is retrieved from db, then do not create user
     if (res.locals.user !== false) {
       res.locals.created = false;
+      // return next();
     }
     const { username, password, profilePic } = req.body; //grabbing responses from post and deconstructing
 
     //! QUERY STRING
     const queryString = `INSERT INTO users (username, password, profilepic) VALUES ($1, $2, $3)`; // updated query
 
-  //? values array initialized with variables
-  const values = [username, password, profilepic];
-  
-  db.query(queryString, values)
-    .then((data) => {
-      console.log(data.rows);
-      //? Data from query stored on res.locals.newUser to pass back to router
-      res.locals.newUser = 'created';
-    })
+    // values array initialized with variables
+    const values = [username, password, profilePic];
+
+    const newQuery = await db.query(queryString, values);
+    // if (error) {
+    //   console.log('Error creating user: ', error);
+    //   res.locals.created = false;
+    //   return next(error);
+
+    console.log('Successfully created user');
+    res.locals.created = true;
+      
+    /*
+  res.locals.created = true;
+  */
+  // const newQuery = await db.query(queryString, values) 
+
+    // if (error) {
+    //   console.log('Error creating user: ', error);
+    //   res.locals.created = false;
+    //   return next(error);
+    // } else {
+    //   console.log('Successfully created user');
+    //   res.locals.created = true;
+    // }
+    // console.log('Successfully created user');
+    // res.locals.created = true;
+    return next();
   } catch (err) {
     return next(err);
   }

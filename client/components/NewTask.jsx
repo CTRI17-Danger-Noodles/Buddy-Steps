@@ -9,6 +9,7 @@ export function NewTask(props) {
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
   const loggedUser = localStorage.getItem('username')
+  const teamName = localStorage.getItem('teamName');
   const [genre, setGenre] = useState('')
 
   function handleChange(event) {
@@ -58,21 +59,26 @@ export function NewTask(props) {
     async function createNewTask() {
       try {
         //TODO: check if fields are empty and return error
-        const response = await fetch(`/api/task/?username=${loggedUser}`, {
+        
+        const response = await fetch(`/api/task`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            task: formData.taskName,
+            name: formData.taskName,
             status: 'to do',
-            // genre: ,
+            genre: null,
             startDate: currDate,
             endDate: endDate,
-            // users: 
+            users: [] 
           }),
         });
-
+        // expect status 200 as a response
+        const data = await response;
+        console.log('data from task posting: ', data);
+        
+        // { name, genre, status, startDate, endDate, users }
         //~ Set the areTasksChanged boolean to true to notify the TaskBoard to refresh
         setAreTasksChanged(true);
 
@@ -106,17 +112,7 @@ export function NewTask(props) {
           <div className="new-task-popup-inner">
             <h2>Create a New Task</h2>
             <hr />
-            <div>
-                <label htmlFor = "genreSelector">
-                <h3>Select Team Members</h3>
-                </label>
-                <Select 
-                  id="userSelector"
-                  options={users}
-                  // value={genre}
-                  onChange={handleUserSubmit}
-                />
-              </div>
+
             <div>
                 <label htmlFor = "genreSelector">
                 <h3>Select a Genre</h3>

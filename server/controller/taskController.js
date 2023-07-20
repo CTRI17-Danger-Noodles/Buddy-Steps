@@ -8,7 +8,7 @@ taskController.createTask = async function (req, res, next) {
   try {
     // destructuring all info about new task
     // *Note: users will be an array of usernames
-    const { name, genre, status, startDate, endDate, users } = req.body;
+    const { name, status, genre, startDate, endDate } = req.body;
     // teamName provided through req.query
     const teamName = req.query.teamName;
     console.log('teamName: ', teamName);
@@ -61,6 +61,7 @@ taskController.updateTask = async function (req, res, next) {
     const { name, genre, status, startDate, endDate, users } = req.body;
     // teamName provided through req.query
     const teamName = req.query.teamName;
+
     // inner join task and board where board.teamname = teamname to make a big board
     //in that table we can grab the task based on name
     const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
