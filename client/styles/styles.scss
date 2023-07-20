@@ -192,7 +192,7 @@ body {
   width: 90%;
   display: grid;
   justify-items: center;
-  justify-content: center;
+  // justify-content: center;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   
 }
@@ -213,22 +213,19 @@ body {
   text-align: center;
   margin: 24px auto;
   width: 40vw;
-  // min-width: 300px;
-  // max-width: 450px;
-  // max-height: 450px;
   min-width: 45px;
   max-width: 300px;
-  max-height: 300px;
+  // max-height: 300px;
   padding: 24px;
   border-radius: 14px;
   border: none;
   background-color: rgba(64, 71, 87, 0.481);
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
-  h3,
-  h4 {
-    letter-spacing: 0.05em;
-    font-weight: 500;
-  }
+  // h3,
+  // h4 {
+  //   letter-spacing: 0.05em;
+  //   font-weight: 500;
+  // }
 }
 
 //^ text in task cards

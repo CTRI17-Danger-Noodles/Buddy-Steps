@@ -81,7 +81,14 @@ export function EditTask(props) {
       method: PATCH,
       body: {
         // status_id updated to match the status_id of toDo
+        status
       }
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log('ERROR: occured in changing status to TO DO')
     })
   }
 
@@ -90,7 +97,14 @@ export function EditTask(props) {
       method: PATCH,
       body: {
         // status_id updated to match the status_id of inProgress
+        status
       }
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log('ERROR: occured in changing status to IN PROGRESS', err)
     })
   }
 
@@ -99,7 +113,14 @@ export function EditTask(props) {
       method: PATCH,
       body: {
         // status_id updated to match the status_id of complete
+        status
       }
+    })
+    .then((res) => {
+      console.log(res)
+    })
+    .catch((err) => {
+      console.log('ERROR: occured in changing status to COMPLETE', err)
     })
   }
 

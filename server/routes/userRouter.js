@@ -14,7 +14,8 @@ router.post('/create', userController.getUser, userController.createUser, (req, 
 // get user's row from user db
 router.post('/login', userController.getUser, userController.checkPassword, (req, res) => {
   // if the user exists and their password was authenticated, then return the user's info from db
-  if (res.locals.exists && res.locals.password) {
+
+  if (res.locals.exists && res.locals.user) { 
     return res.status(200).json(res.locals.user);
   }
   // otherwise notify user that username or password was incorrect

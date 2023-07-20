@@ -18,11 +18,27 @@ export function NewTask(props) {
 
   const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
 
-  const handleGenreSubmit = (options) => {
-    let newGenre = options.label;
-    setGenre(newGenre);
-    console.log('genre select:' + genre)
+  function handleGenreSubmit(selectedOption){
+    setGenre(selectedOption)
+    console.log(genre)
   }
+
+  // const handleGenreSubmit = async (options) => {
+  //   try {
+  //     let newGenre = options.label;
+  //     const newState = await setGenre(newGenre);
+  //     console.log('genre select:' + genre)
+  //   }
+  //   catch(err){
+  //     console.log(err)
+  //   }
+  //   // let newGenre = options.label;
+  //   // async function settingState(){
+  //   //   const newState = await setGenre(newGenre);
+  //   // }
+  //   // settingState();
+    
+  // }
 
   
   //& Handle request on submit button
@@ -53,6 +69,7 @@ export function NewTask(props) {
             // genre: ,
             startDate: currDate,
             endDate: endDate,
+            // users: 
           }),
         });
 
@@ -71,7 +88,16 @@ export function NewTask(props) {
     createNewTask();
   }
 
+  const users = [];
 
+  /*
+  // fetch the users from the current team
+  fetch('/api/teamname')
+    .then((res) => res.json())
+    .then(data => {
+      data.forEach(user => users.push(user))
+    })
+  */
 
   return (
     <div>
@@ -80,7 +106,28 @@ export function NewTask(props) {
           <div className="new-task-popup-inner">
             <h2>Create a New Task</h2>
             <hr />
-
+            <div>
+                <label htmlFor = "genreSelector">
+                <h3>Select Team Members</h3>
+                </label>
+                <Select 
+                  id="userSelector"
+                  options={users}
+                  // value={genre}
+                  onChange={handleUserSubmit}
+                />
+              </div>
+            <div>
+                <label htmlFor = "genreSelector">
+                <h3>Select a Genre</h3>
+                </label>
+                <Select 
+                  id="genreSelector"
+                  options={genres}
+                  value={genre}
+                  onChange={handleGenreSubmit}
+                />
+              </div>
             <form onSubmit={handleSubmit} className="form">
               <div>
                 <label htmlFor="taskName"><h3>Task Name</h3></label>
@@ -104,16 +151,7 @@ export function NewTask(props) {
                   placeholder='Days to Complete'
                 ></input>
               </div>
-              <div>
-                <label htmlFor = "genreSelector">
-                <h3>Select a Genre</h3>
-                </label>
-                <Select 
-                  id="genreSelector"
-                  options={genres}
-                  onChange={handleGenreSubmit}
-                />
-              </div>
+
                 <button className="new-task-submit-button">Submit</button>
                 </form>
                 <button className="new-task-close-button" onClick={closeTaskPopup}>
