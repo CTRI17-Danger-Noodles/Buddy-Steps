@@ -1,6 +1,6 @@
 import React from 'react';
 import Select from 'react-select';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../styles/login.scss';
 import kyle from '../Assets/kyle.png';
 
@@ -9,6 +9,10 @@ export function CreateUser() {
   const [username, setUsername] = useState('');
   const [name, setName] = useState('');
   const [profilepic, setProfile] = useState('');
+
+  useEffect(() => {
+    console.log('profilepic:', profilepic);
+  }, [profilepic]);
 
   const createuser = async () => {
     try {
@@ -23,12 +27,14 @@ export function CreateUser() {
           profilepic: profilepic,
         }),
       });
-      const data = await res.json();
+      const data = await res;
       console.log(data)
-      if (data === 'created') {
+      if (data.status === 200) {
         console.log('created');
-        // window.location.href = '/';
-        navitate('/')
+        localStorage.setItem('username', username); // must log in to set
+        localStorage.setItem('teamName', username); // must log in to set
+        window.location.href = '/home';
+        
       }
     } catch (error) {
       console.log(error);
@@ -83,8 +89,15 @@ export function CreateUser() {
 
   const handleProfileChange = (selectedOption) => {
     setProfile(selectedOption.value);
-    console.log(profilepic);
+    console.log('profile pic', profilepic);
   };
+
+  // useEffect(() => {
+  //   const handleProfileChange = (selectedOption) => {
+  //     setProfile(selectedOption.value);
+  //     console.log(profilepic);
+  //   };
+  // }, [])
 
   return (
     <div id="login-container">

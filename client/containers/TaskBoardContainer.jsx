@@ -24,13 +24,13 @@ export function TaskBoard(props) {
         // body: {
           // teamName
         // }
-      const response = await fetch(`/api/team`, {
-        method: 'POST',
-        body: {
-          teamName: teamName
-        }
-      })
-      const newTaskData = await response.json();
+      // const response = await fetch(`/api/team`, {
+      //   method: 'POST',
+      //   body: {
+      //     teamName: teamName
+      //   }
+      // })
+      // const newTaskData = await response.json();
       console.log('newTaskData line 34: ', newTaskData)
       // console.log(newTaskData)
       setTaskData(newTaskData);

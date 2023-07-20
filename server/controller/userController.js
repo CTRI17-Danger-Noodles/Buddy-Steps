@@ -6,6 +6,7 @@ const userController = {};
 // create a new user on the users table
 userController.createUser = async (req, res, next) => {
   try {
+    // if user is retrieved from db, then do not create user
     if (res.locals.user !== false) {
       res.locals.created = false;
       // return next();
@@ -18,17 +19,15 @@ userController.createUser = async (req, res, next) => {
     // values array initialized with variables
     const values = [username, password, profilePic];
 
-    const newQuery = await db.query(queryString, values, (error, result) => {
-      if (error) {
-        console.log('Error creating user: ', error);
-        res.locals.created = false;
-        return next(error);
-      } else {
-        console.log('Successfully created user');
-        res.locals.created = true;
-        
-      }
-    });
+    const newQuery = await db.query(queryString, values);
+    // if (error) {
+    //   console.log('Error creating user: ', error);
+    //   res.locals.created = false;
+    //   return next(error);
+
+    console.log('Successfully created user');
+    res.locals.created = true;
+      
     /*
   res.locals.created = true;
   */

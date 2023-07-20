@@ -9,6 +9,7 @@ export function NewTask(props) {
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
   const loggedUser = localStorage.getItem('username')
+  const teamName = localStorage.getItem('teamName');
   const [genre, setGenre] = useState('')
 
   function handleChange(event) {
@@ -58,7 +59,8 @@ export function NewTask(props) {
     async function createNewTask() {
       try {
         //TODO: check if fields are empty and return error
-        const response = await fetch(`/api/task/?username=${loggedUser}`, {
+        
+        const response = await fetch(`/api/task/?teamName=${teamName}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -69,10 +71,11 @@ export function NewTask(props) {
             // genre: ,
             startDate: currDate,
             endDate: endDate,
-            // users: 
+            users: [] 
           }),
         });
-        const data = await response.json();
+        // expect status 200 as a response
+        const data = await response;
         console.log(data);
         
         // { name, genre, status, startDate, endDate, users }
