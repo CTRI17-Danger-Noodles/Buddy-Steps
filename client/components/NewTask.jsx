@@ -60,7 +60,7 @@ export function NewTask(props) {
       try {
         //TODO: check if fields are empty and return error
         
-        const response = await fetch(`/api/task/?teamName=${teamName}`, {
+        const response = await fetch(`/api/task`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export function NewTask(props) {
           body: JSON.stringify({
             name: formData.taskName,
             status: 'to do',
-            // genre: ,
+            genre: null,
             startDate: currDate,
             endDate: endDate,
             users: [] 
@@ -76,7 +76,7 @@ export function NewTask(props) {
         });
         // expect status 200 as a response
         const data = await response;
-        console.log(data);
+        console.log('data from task posting: ', data);
         
         // { name, genre, status, startDate, endDate, users }
         //~ Set the areTasksChanged boolean to true to notify the TaskBoard to refresh

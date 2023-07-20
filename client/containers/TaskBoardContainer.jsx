@@ -20,21 +20,17 @@ export function TaskBoard(props) {
     // get tasks associated with username
     async function getTasksData(loggedUser) {
       // update to post
-        // localStorage.getItem('teamName')
-        // body: {
-          // teamName
-        // }
-      // const response = await fetch(`/api/team`, {
-      //   method: 'POST',
-      //   body: {
-      //     teamName: teamName
-      //   }
-      // })
-      // const newTaskData = await response.json();
-      console.log('newTaskData line 34: ', newTaskData)
-      // console.log(newTaskData)
+      const response = await fetch(`/api/team`, {
+        method: 'POST',
+        body: {
+          teamName: teamName
+        }
+      })
+      const newTaskData = await response;
+      console.log('newTaskData line 30: ', newTaskData)
+      console.log(newTaskData)
       setTaskData(newTaskData);
-      console.log('taskData line 22', taskData)
+      console.log('taskData line 33', taskData)
       console.log('length: ', newTaskData.length);
     }
     console.log('printing global username in taskboard: ', loggedUser);
