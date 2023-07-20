@@ -22,7 +22,10 @@ userController.createUser = (req, res, next) => {
       console.log(data.rows);
       //? Data from query stored on res.locals.newUser to pass back to router
       res.locals.newUser = 'created';
-
+    })
+  } catch (err) {
+    return next(err);
+  }
 };
 
 // check if user exists in database
