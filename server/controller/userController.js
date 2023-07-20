@@ -43,16 +43,13 @@ userController.createUser = (req, res, next) => {
 // check if user exists in database
 userController.getUser = async (req, res, next) => {
   try {
-    console.log('res locals starts:', res.locals.user);
+    console.log(JSON.stringify({ name: 'debug', genre: 'productive', status: 'in progress', startDate: '2023-07-19', endDate: '2023-07-29', users: ['Ky', 'Ry', 'Halia'] }))
     const { username, password } = req.body;
     //! QUERY STRING
     const queryString = `SELECT * FROM users WHERE username = $1 and password = $2`;
 
     const values = [username, password];
-    console.log('req body: ', req.body);
     const result = await db.query(queryString, values);
-    console.log('result is: ', result.rows);
-    console.log(password);
 
     if (!result || result.rows.length === 0) {
       // no users were found with the desired username/password
@@ -61,7 +58,6 @@ userController.getUser = async (req, res, next) => {
     } else {
       res.locals.user = result.rows[0]; // user is found , set res.locals.user to user info
       res.locals.exists = true;
-      console.log('res.locals.user:', res.locals.user);
     }
     /*
       res.locals.user = all info on users row
@@ -81,9 +77,6 @@ userController.getUser = async (req, res, next) => {
 // check if the user's password matches the one stored in db
 userController.checkPassword = (req, res, next) => {
   try {
-    // console.log('res.locals.user: ', res.locals.user);
-    // console.log(req.body);
-    console.log('res locals pw:', res.locals.user.password);
     let matching = false;
     res.locals.user.password === req.body.password
       ? (matching = true)

@@ -14,7 +14,7 @@ teamController.getTasks = (req, res, next) => {
     const values = [teamName];
 
     const foundTeamTasks = db.query(queryString, values, (error, result) => {
-      if (err) {
+      if (error) {
         console.log('team not found');
       } else {
         console.log('team found!');
