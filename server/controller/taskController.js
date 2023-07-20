@@ -38,9 +38,9 @@ taskController.createTask = async function (req, res, next) {
     }
 
     //adding to board table
-    const boardQuery = `INSERT INTO board (team_name, task_id) VALUES ($1, $2)`
-    
-    await db.query(boardQuery, [teamName,taskId]);
+    const boardQuery = `INSERT INTO board (team_name, task_id) VALUES ($1, $2)`;
+
+    await db.query(boardQuery, [teamName, taskId]);
 
     return next();
   } catch (err) {
@@ -56,40 +56,62 @@ taskController.createTask = async function (req, res, next) {
 // this method assumes each team has uniquely named tasks
 taskController.updateTask = async function (req, res, next) {
   try {
+    console.log('entered update task controller');
     // destructuring all info about new task
     // *Note: users will be an array of usernames
-    const { name, genre, status, startDate, endDate, users } = req.body;
+    const { oldname, name, status } = req.body;
+    console.log('name submitted: ', name )
     // teamName provided through req.query
     const teamName = req.query.teamName;
+    console.log('req.query.teamName', req.query.teamName);
+    console.log('req.body.oldname: ', oldname);
+    console.log('req.body: ', req.body);
 
     // inner join task and board where board.teamname = teamname to make a big board
     //in that table we can grab the task based on name
     const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
     //find id from this task
-    const queryBigTable = await db.query(queryTask);
+    const queryBigTable = await db.query(queryTask); // rows: [
+    // [1]     { _id: 92, name: 'dance', team_name: 'Wade' },
+    // [1]     { _id: 96, name: 'meditate', team_name: 'Arianna' },
+    // [1]     { _id: 97, name: 'Prepare for Talent Show', team_name: 'Ry' }
+    // [1]   ],
+    console.log('queryBigTable: ', queryBigTable);
     //filter huge table to only tasks that involve our teamName
-    const tasksOfTeam = queryBigTable.rows.filter(
-      (obj) => obj.team_name === teamName
-    );
+    const tasksOfTeam = queryBigTable.rows.filter((obj) => {
+      return obj.team_name === teamName;
+    });
+    console.log('tasksOfTeam: ', tasksOfTeam);
+
     // filter teamTable to only tasks with that taskname
     const taskIdObj = tasksOfTeam.filter((obj2) => {
-      return obj2.name === name;
+      return obj2.name === oldname;
     });
 
+    console.log('taskIdObj: ', taskIdObj);
+
     const taskId = taskIdObj[0]['_id'];
+    console.log('taskId: ', taskId);
+    let updateTaskQ = '';
+    const values = [taskId];
+    if (name !== null) {
+      // update the task
+      updateTaskQ = 'UPDATE task SET name = $2 WHERE _id = $1';
+      values.push(name);
+    }
+    if (status !== null) {
+      updateTaskQ =
+        'UPDATE task SET status_id = (SELECT _id FROM status WHERE type = $2) WHERE _id = $1';
+      values.push(status);
+    }
 
-    // update the task
-    const updateTaskQ =
-      'UPDATE task SET name = $1, genre_id = (SELECT _id FROM genres WHERE genre = $2), status_id = (SELECT _id FROM status WHERE type = $3), start_date = $4, end_date = $5 WHERE _id = $6';
-
-    const values = [name, genre, status, startDate, endDate, taskId];
-    const resultsPlease = await db.query(updateTaskQ, values);
+    const statusOrName = await db.query(updateTaskQ, values);
 
     //update the task_user table
-    for (const el of users) {
-      queryConcatStr = `INSERT INTO task_user (task_id, user_id) VALUES ($1, (SELECT _id FROM users WHERE username = $2)) `;
-      await db.query(queryConcatStr, [taskId, el]);
-    }
+    // for (const el of users) {
+    //   queryConcatStr = `INSERT INTO task_user (task_id, user_id) VALUES ($1, (SELECT _id FROM users WHERE username = $2)) `;
+    //   await db.query(queryConcatStr, [taskId, el]);
+    // }
 
     return next();
   } catch (err) {
@@ -106,15 +128,14 @@ taskController.updateTask = async function (req, res, next) {
 taskController.deleteTask = async function (req, res, next) {
   try {
     // retrieve task name and teamName
-    const { name } = req.body;
-    const teamName = req.query.teamName;
+    const { name, teamName } = req.body;
 
     // step 1: find taskId from teamName
     const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
     //find id from this task
-    
+
     const queryBigTable = await db.query(queryTask);
-    
+
     //filter huge table to only tasks that involve our teamName
     const tasksOfTeam = queryBigTable.rows.filter(
       (obj) => obj.team_name === teamName
@@ -133,7 +154,7 @@ taskController.deleteTask = async function (req, res, next) {
 
     const queryDeleteFromBoard = `DELETE FROM board WHERE task_id = $1`;
     await db.query(queryDeleteFromBoard, [taskId]);
-    
+
     return next();
   } catch (err) {
     return next({

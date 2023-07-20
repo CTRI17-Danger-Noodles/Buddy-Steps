@@ -36,7 +36,7 @@ export function HeaderContainer(props) {
             username: loggedUser,
           }),
         });
-        const data = await res.json();
+        const data = await res;
         console.log('header data: ', data);
         console.log('profile pic link: ', options[loggedPic].value);
         // setProfilePic(data.profilepic);
@@ -81,6 +81,8 @@ export function HeaderContainer(props) {
           {loggedUser}'s Team Homepage
           <br />
           Here are your Current Habits:{' '}
+          <br />
+          Let's whack off those tasks!
         </h1>
         <img
           src={Icon}

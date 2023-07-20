@@ -3,6 +3,7 @@ import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/login.scss';
 import { UserContext } from '../contexts/Contexts';
+import kyle from '../Assets/kyle.png';
 
 
 
@@ -35,7 +36,7 @@ export function Login() {
         console.log('username: ', username);
         localStorage.setItem('username', username); // must log in to set
         localStorage.setItem('teamName', username); // must log in to set
-        localStorage.setItem('profilepic', 0);
+        localStorage.setItem('profilepic', data.profilepic);
         navigate('/home')
         console.log('hey im in');
       }
@@ -55,7 +56,7 @@ export function Login() {
   return (
     <div id="login-container">
       <div id="login-contents">
-        <h1>Welcome to WHAKR</h1>
+        <h1>Welcome to TASK WHAKR</h1>
         <hr />
         <h2>Sign in Below</h2>
         <div className="input-container">

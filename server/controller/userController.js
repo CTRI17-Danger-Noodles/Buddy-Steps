@@ -13,13 +13,12 @@ userController.getUserInfo = async (req, res, next) => {
     const profilePicIndex = results.rows[0].profilepic;
     //saving whole object for now
     res.locals.userInfo = profilePicIndex;
-x
     return next();//okkie :pepe-claps: lol
   } catch (err) {
     return next({
-      log: `userController.checkPassword ERROR: ` + err,
+      log: `userController.getUserInfo ERROR: ` + err,
       message: {
-        err: `Error checking password`,
+        err: `Error getting info`,
       },
     });
   }
@@ -104,8 +103,6 @@ userController.getUser = async (req, res, next) => {
 userController.checkPassword = (req, res, next) => {
   try {
     let matching = false;
-    console.log('res.locals.user.password: ', res.locals.user.password);
-    console.log('req.body.password: ', req.body.password)
     // if the inputted password matches the stored password, its a match!
     res.locals.user.password === req.body.password
       ? (matching = true)

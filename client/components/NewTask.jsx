@@ -24,7 +24,6 @@ export function NewTask(props) {
     { label: 'Hobbies' },
     { label: 'Spiritual' },
   ];
-
   function handleGenreSubmit(selectedOption) {
     setGenre(selectedOption);
     // console.log(genre);
@@ -50,14 +49,20 @@ export function NewTask(props) {
   //& Handle request on submit button
   function handleSubmit(event) {
     event.preventDefault();
-
     //~ Get form data and additional data to send to API
-
+    console.log('clicked submit new task');
     // Get current date
     const currDate = new Date();
+    // console.log('currDate: ', currDate);
     // Calculate end date
-    const endDate = new Date();
+    const endDate = new Date(currDate); //initialize it to currDate 
+    console.log('endDate: ', endDate);
+    // console.log('Number(formData.days) ', Number(formData.days))
+     //getDate retrieves the number of the month
+     //setDate sets the date of the month
     endDate.setDate(currDate.getDate() + Number(formData.days));
+
+    console.log('endDate modified: ', endDate);
     // console.log('data to send: ', formData.taskName, currDate, endDate)
 
     //~ Create new task by sending POST req with data
@@ -153,7 +158,7 @@ export function NewTask(props) {
                   <h3>Days to Complete Task</h3>
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="days"
                   name="days"
                   value={formData.days}
