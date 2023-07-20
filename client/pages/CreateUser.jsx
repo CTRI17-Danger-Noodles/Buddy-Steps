@@ -24,9 +24,11 @@ export function CreateUser() {
         }),
       });
       const data = await res.json();
+      console.log(data)
       if (data === 'created') {
         console.log('created');
-        window.location.href = '/';
+        // window.location.href = '/';
+        navitate('/')
       }
     } catch (error) {
       console.log(error);

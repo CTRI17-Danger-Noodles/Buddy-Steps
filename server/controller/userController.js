@@ -4,10 +4,11 @@ const userController = {};
 
 //^ createUsers method to create a new user on the user table from the db
 // create a new user on the users table
-userController.createUser = (req, res, next) => {
+userController.createUser = async (req, res, next) => {
   try {
     if (res.locals.user !== false) {
       res.locals.created = false;
+      // return next();
     }
     const { username, password, profilePic } = req.body; //grabbing responses from post and deconstructing
 
@@ -17,18 +18,32 @@ userController.createUser = (req, res, next) => {
     // values array initialized with variables
     const values = [username, password, profilePic];
 
-    db.query(queryString, values, (error, result) => {
+    const newQuery = await db.query(queryString, values, (error, result) => {
       if (error) {
         console.log('Error creating user: ', error);
         res.locals.created = false;
+        return next(error);
       } else {
         console.log('Successfully created user');
         res.locals.created = true;
+        
       }
     });
     /*
   res.locals.created = true;
   */
+  // const newQuery = await db.query(queryString, values) 
+
+    // if (error) {
+    //   console.log('Error creating user: ', error);
+    //   res.locals.created = false;
+    //   return next(error);
+    // } else {
+    //   console.log('Successfully created user');
+    //   res.locals.created = true;
+    // }
+    // console.log('Successfully created user');
+    // res.locals.created = true;
     return next();
   } catch (err) {
     return next({

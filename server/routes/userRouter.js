@@ -7,6 +7,13 @@ const router = express.Router();
 router.post('/create', userController.getUser, userController.createUser, (req, res) => {
   console.log('Entered user creation')
   res.locals.created === true ? res.sendStatus(200) : res.status(200).json('that username  is already taken!')
+  // if(res.locals.created === true){
+  //   res.sendStatus(200)
+  //   console.log('created')
+  // }
+  // else{
+  //   res.status(200).json('that username  is already taken!')
+  // }
   /*
     response 200
   */ 

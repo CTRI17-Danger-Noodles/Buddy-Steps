@@ -11,7 +11,7 @@ taskController.createTask = async function (req, res, next) {
   try {
     // destructuring all info about new task
     // *Note: users will be an array of usernames
-    const { name, genre, status, startDate, endDate, users } = req.body;
+    const { name, status, startDate, endDate } = req.body;
     // teamName provided through req.query
     const teamName = req.query.teamName;
 

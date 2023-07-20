@@ -19,6 +19,7 @@ export function HeaderContainer(props) {
       try {
         const res = await fetch(`/api/user/?username=${loggedUser}`);
         const data = await res.json();
+        console.log('data headercontainer line 22: ', data);
         setProfilePic(data.profilepic);
         setName(data.name);
       } catch (err) {

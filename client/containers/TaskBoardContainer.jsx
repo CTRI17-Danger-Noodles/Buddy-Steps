@@ -10,6 +10,7 @@ export function TaskBoard(props) {
   const [editPopup, setEditPopup] = useState(false);
   const [taskIndex, setTaskIndex] = useState(-1);
   const loggedUser = localStorage.getItem('username')
+  const teamName = localStorage.getItem('teamName')
   const toDoArr = [];
   const inProgressArr = [];
   const completeArr = [];
@@ -23,8 +24,14 @@ export function TaskBoard(props) {
         // body: {
           // teamName
         // }
-      const response = await fetch(`/api/task/?username=${loggedUser}`)
+      const response = await fetch(`/api/team`, {
+        method: 'POST',
+        body: {
+          teamName: teamName
+        }
+      })
       const newTaskData = await response.json();
+      console.log('newTaskData line 34: ', newTaskData)
       // console.log(newTaskData)
       setTaskData(newTaskData);
       console.log('taskData line 22', taskData)
