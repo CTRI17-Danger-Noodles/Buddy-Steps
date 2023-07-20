@@ -462,7 +462,42 @@ hr {
   // margin-bottom: 10px;
 }
 
+.current-teams-popup-members {
+  font-size: 0.7rem;
+}
+
 .team-button {
   display: flex;
   flex-direction: column;
+  border-radius: 0px;
+  background-color: rgb(89, 132, 167);
+  padding: none;
+  margin: 0%;
+}
+
+.team-button :hover {
+    cursor: pointer;
+    background-color: lighten(rgb(89, 132, 167), 15%);
+    border-radius: 0px;
+}
+
+.current-teams-close-button {
+  position: absolute;
+  height: 24px;
+  width: 24px;
+  top: 16px;
+  right: 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: rgb(0, 168, 162);
+}
+
+.current-teams-close-button :hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.current-teams-popup-inner {
+  width: 100px;
+  height: auto;
 }
