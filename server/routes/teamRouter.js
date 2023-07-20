@@ -34,19 +34,6 @@ router.post('/new', teamController.createTeam, (req, res) => {
 // get all teams that a user is a part of, and also include an users array of other team members
 router.post('/current', teamController.getTeams, (req, res) => {
     return res.status(200).json(res.locals.currTeams);
-    /*
-    response:
-      [
-        { 
-          teamName:
-          users: [];
-        },
-        { 
-          teamName:
-          users: [];
-        },
-      ]
-    */
 })
 
 module.exports = router;
