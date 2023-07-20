@@ -17,23 +17,24 @@ export function TaskBoard(props) {
   
   //& Render tasks on start up and re-render them everytime the username or task data changes
   useEffect(() => {
+    // console.log('teamName: ', teamName);
     // get tasks associated with username
     async function getTasksData(loggedUser) {
       // update to post
       const response = await fetch(`/api/team`, {
         method: 'POST',
-        body: {
-          teamName: teamName
-        }
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          'teamName': teamName,
+        })
       })
-      const newTaskData = await response;
-      console.log('newTaskData line 30: ', newTaskData)
-      console.log(newTaskData)
+      const newTaskData = await response.json();
+      // console.log('newTaskData line 30: ', newTaskData)
       setTaskData(newTaskData);
-      console.log('taskData line 33', taskData)
-      console.log('length: ', newTaskData.length);
     }
-    console.log('printing global username in taskboard: ', loggedUser);
+    // console.log('printing global username in taskboard: ', loggedUser);
     getTasksData(loggedUser);
     // set boolean to false
     setAreTasksChanged(false);
@@ -79,29 +80,28 @@ export function TaskBoard(props) {
     } else completeArr.push(taskData[i])
   }
 
-
   inProgressArr.push({
     enddate: "2023-07-19T21:00:43.013Z",
     startdate: "2023-07-19T21:33:25.774Z",
     taskID: 200,
-    task: 'testing hardcode task',
+    task: 'Give an Awesome Presentation',
     status: 'in progress'
   })
 
-  // console.log('toDoArr: ', toDoArr)
-  console.log('whole Array: ', taskData)
+  // console.log('completeArr.length: ', completeArr.length)
+  // console.log('inProgressArr.length: ', inProgressArr.length)
+  // console.log('toDoArr.length: ', toDoArr.length)
+  // console.log('whole Array: ', taskData)
   return (
     <div className="task-board">
       <progress className="progress-bar" value={(completeArr.length / (completeArr.length + inProgressArr.length + toDoArr.length)) * 100} max="100" />
       <div className= 'progressDiv'>
         <div className="scrumDiv">
           <h3> To Do</h3>
-          {console.log(taskData)}
-
           {toDoArr.map((task, index) => {
             return (
               <Task
-                task={task.task}
+                task={task.name}
                 taskID={task.taskID}
                 startdate={task.startdate}
                 enddate={task.enddate}
@@ -112,6 +112,7 @@ export function TaskBoard(props) {
                 setTaskData={setTaskData}
                 openEditPopup={openEditPopup}
                 deleteTask={deleteTask}
+                users={task.users}
               />
             );
           })}

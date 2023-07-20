@@ -3,6 +3,15 @@ const userController = require("../controller/userController");
 
 const router = express.Router();
 
+// add GET request to username and profile pic?
+router.post(
+  "/",
+  userController.getUserInfo,
+  (req, res) => {
+    res.status(200).json(res.locals.userInfo);
+  }
+);
+
 // add new user to user table if they inputted a unique username
 router.post(
   "/create",
@@ -11,13 +20,7 @@ router.post(
   (req, res) => {
     res.locals.created === true
       ? res.sendStatus(200)
-      : res.status(200).json("that username  is already taken!");
-    // if (res.locals.created === true) {
-    //   res.sendStatus(200);
-    //   console.log("created");
-    // } // else {
-  //     res.status(200).json("that username  is already taken!");
-  //   }
+      : res.status(201).json("that username is already taken!");
     /*
     response 200
   */

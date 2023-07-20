@@ -14,13 +14,17 @@ teamController.getTasks = async (req, res, next) => {
     // values array initialized with variables
     const values = [teamName];
 
+    // finding task_ids associated with the current team name
     const foundTeamTasks = await db.query(queryString, values);
+ // rows: [ { _id: 11, team_name: 'ant', task_id: 88 } ],
     const arrayFromBoard = foundTeamTasks.rows;
-    const taskIds = [];
+     // [ { _id: 11, team_name: 'ant', task_id: 88 } ]
+    const taskIds = []; // [ 11 ]
     arrayFromBoard.forEach((el) => {
-      taskIds.push(el['_id']);
+      taskIds.push(el['task_id']);
     });
-
+  
+    
     //for each task id, find all the info and also the associated users
     const allTasksAndInfo = [];
     for (const el of taskIds) {
@@ -35,6 +39,7 @@ teamController.getTasks = async (req, res, next) => {
     }
 
     res.locals.teamTasks = allTasksAndInfo;
+
     return next();
     /*
   array of objects containing each task
@@ -98,12 +103,9 @@ teamController.createTeam = async (req, res, next) => {
 
 teamController.getTeams = async (req, res, next) => {
   try {
-    console.log(`entering teamController getTeams`);
     const { username } = req.body;
-    console.log('username: ', username);
-
+    
     //get userId
-
     const queryUserId = `SELECT _id FROM users WHERE username = $1`;
     const userIdResult = await db.query(queryUserId, [username]);
     const userId = userIdResult.rows[0]._id;

@@ -13,10 +13,10 @@ export function App() {
   
   // stores user to persist state
   const loggedUser = localStorage.getItem('username');
-  console.log('localStorage username: ', loggedUser);
+  // console.log('localStorage username: ', loggedUser);
   const setTeam = localStorage.getItem('teamName');
-  console.log('localStorage teamName: ', setTeam);
-
+  // console.log('localStorage teamName: ', setTeam);
+  const profilepic = localStorage.getItem('profilepic')
   // const [globalUsername, setGlobalUsername] = useState(loggedUser)
 
   return (

@@ -4,24 +4,30 @@ import Select from 'react-select';
 
 export function NewTask(props) {
   //   const tester = 'tester'
-  const { globalUsername } = useContext(UserContext);
+  // const { globalUsername } = useContext(UserContext);
   const { setAreTasksChanged, taskPopup, closeTaskPopup, setTaskData } = props;
   const emptyForm = { taskName: '', days: '' };
   const [formData, setFormData] = useState(emptyForm);
-  const loggedUser = localStorage.getItem('username')
+  const loggedUser = localStorage.getItem('username');
   const teamName = localStorage.getItem('teamName');
-  const [genre, setGenre] = useState('')
+  const [genre, setGenre] = useState('');
 
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   }
 
-  const genres = [{label: "Work"}, {label: "Personal"}, {label:"Fitness"}, {label: "Hobbies"}, {label:"Spiritual"}]
+  const genres = [
+    { label: 'Work' },
+    { label: 'Personal' },
+    { label: 'Fitness' },
+    { label: 'Hobbies' },
+    { label: 'Spiritual' },
+  ];
 
-  function handleGenreSubmit(selectedOption){
-    setGenre(selectedOption)
-    console.log(genre)
+  function handleGenreSubmit(selectedOption) {
+    setGenre(selectedOption);
+    // console.log(genre);
   }
 
   // const handleGenreSubmit = async (options) => {
@@ -38,10 +44,9 @@ export function NewTask(props) {
   //   //   const newState = await setGenre(newGenre);
   //   // }
   //   // settingState();
-    
+
   // }
 
-  
   //& Handle request on submit button
   function handleSubmit(event) {
     event.preventDefault();
@@ -59,8 +64,8 @@ export function NewTask(props) {
     async function createNewTask() {
       try {
         //TODO: check if fields are empty and return error
-        
-        const response = await fetch(`/api/task`, {
+        console.log('entered createnewtask');
+        const response = await fetch(`/api/task/?teamName=${teamName}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -68,16 +73,17 @@ export function NewTask(props) {
           body: JSON.stringify({
             name: formData.taskName,
             status: 'to do',
-            genre: null,
+            genre: 'fitness',
             startDate: currDate,
             endDate: endDate,
-            users: [] 
+            users: [loggedUser],
           }),
         });
+        // console.log('response', response);
         // expect status 200 as a response
         const data = await response;
-        console.log('data from task posting: ', data);
-        
+        // console.log('data from task posting: ', data);
+
         // { name, genre, status, startDate, endDate, users }
         //~ Set the areTasksChanged boolean to true to notify the TaskBoard to refresh
         setAreTasksChanged(true);
@@ -87,10 +93,14 @@ export function NewTask(props) {
 
         //~ Close Popout
         closeTaskPopup();
+
+        // re render page after posting task
+        location.reload();
       } catch (err) {
-        console.log(err);
+        console.log('createNewTask:', err);
       }
     }
+
     createNewTask();
   }
 
@@ -114,48 +124,54 @@ export function NewTask(props) {
             <hr />
 
             <div>
-                <label htmlFor = "genreSelector">
+              <label htmlFor="genreSelector">
                 <h3>Select a Genre</h3>
-                </label>
-                <Select 
-                  id="genreSelector"
-                  options={genres}
-                  value={genre}
-                  onChange={handleGenreSubmit}
-                />
-              </div>
+              </label>
+              <Select
+                id="genreSelector"
+                options={genres}
+                value={genre}
+                onChange={handleGenreSubmit}
+              />
+            </div>
             <form onSubmit={handleSubmit} className="form">
               <div>
-                <label htmlFor="taskName"><h3>Task Name</h3></label>
+                <label htmlFor="taskName">
+                  <h3>Task Name</h3>
+                </label>
                 <input
                   type="text"
                   id="taskName"
                   name="taskName"
                   value={formData.taskName}
                   onChange={handleChange}
-                  placeholder='New Task'
+                  placeholder="New Task"
                 ></input>
               </div>
               <div>
-                <label htmlFor="days"><h3>Days to Complete Task</h3></label>
+                <label htmlFor="days">
+                  <h3>Days to Complete Task</h3>
+                </label>
                 <input
                   type="text"
                   id="days"
                   name="days"
                   value={formData.days}
                   onChange={handleChange}
-                  placeholder='Days to Complete'
+                  placeholder="Days to Complete"
                 ></input>
               </div>
 
-                <button className="new-task-submit-button">Submit</button>
-                </form>
-                <button className="new-task-close-button" onClick={closeTaskPopup}>
-                x
-                </button>
+              <button className="new-task-submit-button">Submit</button>
+            </form>
+            <button className="new-task-close-button" onClick={closeTaskPopup}>
+              x
+            </button>
           </div>
         </div>
-      ) : ('')}
+      ) : (
+        ''
+      )}
     </div>
   );
 }

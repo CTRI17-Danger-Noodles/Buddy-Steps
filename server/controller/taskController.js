@@ -8,11 +8,9 @@ taskController.createTask = async function (req, res, next) {
   try {
     // destructuring all info about new task
     // *Note: users will be an array of usernames
-    const { name, status, genre, startDate, endDate } = req.body;
+    const { name, status, genre, startDate, endDate, users } = req.body;
     // teamName provided through req.query
     const teamName = req.query.teamName;
-    console.log('teamName: ', teamName);
-
     //get the genre id,
     //get the status id,
     const queryString = `INSERT INTO task (name, genre_id, status_id, start_date, end_date) 
@@ -30,8 +28,6 @@ taskController.createTask = async function (req, res, next) {
 
     const taskIdObj = await db.query(queryId);
     const taskId = taskIdObj.rows[0]['_id'];
-    // const taskId = taskIdObj.rows[0]
-    // console.log('taskId: ', taskId)
 
     // in task_user table, add this task_id with each user_id
     // users.forEach(async (el) => { // for each does not like async/await, opted for FOR OF
@@ -41,7 +37,11 @@ taskController.createTask = async function (req, res, next) {
       await db.query(queryConcatStr, [taskId, el]);
     }
 
-    console.log('leaving createTask middleware');
+    //adding to board table
+    const boardQuery = `INSERT INTO board (team_name, task_id) VALUES ($1, $2)`
+    
+    await db.query(boardQuery, [teamName,taskId]);
+
     return next();
   } catch (err) {
     return next({
