@@ -57,7 +57,7 @@ userController.createUser = async (req, res, next) => {
 // check if user exists in database
 userController.getUser = async (req, res, next) => {
   try {
-    console.log(JSON.stringify({ name: 'debug', genre: 'productive', status: 'in progress', startDate: '2023-07-19', endDate: '2023-07-29', users: ['Ky', 'Ry', 'Halia'] }))
+    // console.log(JSON.stringify({ name: 'debug', genre: 'productive', status: 'in progress', startDate: '2023-07-19', endDate: '2023-07-29', users: ['Ky', 'Ry', 'Halia'] }))
     const { username, password } = req.body;
     //! QUERY STRING
     const queryString = `SELECT * FROM users WHERE username = $1 and password = $2`;
