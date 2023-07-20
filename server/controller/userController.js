@@ -2,119 +2,90 @@ const db = require('../models/buddyModel');
 
 const userController = {};
 
-//^ getUsers method to retrieve user info from db
-userController.getUser = (req, res, next) => {
-  //? Query string pulling the id, username, password, and name from users table on the database with the username from req.query
-  console.log('Im in userController.getUser')
-  const queryString =
-    'SELECT id, username,password, profilepic, name FROM users WHERE username = $1';
-
-  //? username intialized to desantitize data from req.query object
-  const username = req.query.username;
-
-  db.query(queryString, [username])
-    .then((data) => {
-      //? Data from query stored on res.locals.user to pass back to router
-      res.locals.user = data.rows[0];
-
-      return next();
-    })
-    .catch((err) => {
-      return next({
-        status: 400,
-        log: `${err}: Error on user.Controller.getUsers`,
-        message: 'Error getting user',
-      });
-    });
-};
-
 //^ createUsers method to create a new user on the user table from the db
 // create a new user on the users table
 userController.createUser = (req, res, next) => {
-
   try {
-  if (res.locals.user !== false) {
-    res.locals.created = false;
-  }
-  const { username, password, profilePic } = req.body; //grabbing responses from post and deconstructing
-
-
-  //! QUERY STRING
-  const queryString = `INSERT INTO users (username, password, profilepic) VALUES ($1, $2, $3)`; // updated query
-
-
-  // values array initialized with variables
-  const values = [username, password, profilePic];
-
-  db.query(queryString, values, (err, res) => {
-    if (err) {
-      console.log('Error creating user: ', err);
+    if (res.locals.user !== false) {
       res.locals.created = false;
-    } else {
-      console.log('Successfully created user');
-      res.locals.created = true;
     }
-  });
-  /*
+    const { username, password, profilePic } = req.body; //grabbing responses from post and deconstructing
+
+    //! QUERY STRING
+    const queryString = `INSERT INTO users (username, password, profilepic) VALUES ($1, $2, $3)`; // updated query
+
+    // values array initialized with variables
+    const values = [username, password, profilePic];
+
+    db.query(queryString, values, (error, result) => {
+      if (error) {
+        console.log('Error creating user: ', error);
+        res.locals.created = false;
+      } else {
+        console.log('Successfully created user');
+        res.locals.created = true;
+      }
+    });
+    /*
   res.locals.created = true;
   */
-  return next();
-} catch (err) {
-  return next({
-    log: `userController.createUser ERROR: ` + err,
-    message: {
-      err: `trouble creating user`,
-    },
-  });
-}
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.createUser ERROR: ` + err,
+      message: {
+        err: `trouble creating user`,
+      },
+    });
+  }
 };
 
 // check if user exists in database
-userController.getUser = (req, res, next) => {
+userController.getUser = async (req, res, next) => {
   try {
+    console.log('res locals starts:', res.locals.user);
+    const { username, password } = req.body;
+    //! QUERY STRING
+    const queryString = `SELECT * FROM users WHERE username = $1 and password = $2`;
 
-  const { username, password } = req.body;
-  //! QUERY STRING
-  const queryString = `SELECT * FROM users WHERE username = $1 and password = $2`;
+    const values = [username, password];
+    console.log('req body: ', req.body);
+    const result = await db.query(queryString, values);
+    console.log('result is: ', result.rows);
+    console.log(password);
 
-  const values = [username, password];
-
-  db.query(queryString, values, (err, res) => {
-    if (err) {
-      //error check
-      console.log('Error retrieving user: ', err);
+    if (!result || result.rows.length === 0) {
+      // no users were found with the desired username/password
       res.locals.user = false;
+      res.locals.exists = false;
     } else {
-      if (ResultType.length === 0) {
-        // no users were found with the desired username/password
-        res.locals.user = false;
-      } else {
-        res.locals.user = result[0]; // user is found , set res.locals.user to user info
-      }
+      res.locals.user = result.rows[0]; // user is found , set res.locals.user to user info
+      res.locals.exists = true;
+      console.log('res.locals.user:', res.locals.user);
     }
-  });
-  /*
+    /*
       res.locals.user = all info on users row
       or false if no user with the req username exists
       */
-  return next();
-} catch (err) {
-  return next({
-    log: `userController.getUser ERROR: ` + err,
-    message: {
-      err: `trouble fetching user`,
-    },
-  });
-}
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.getUser ERROR: ` + err,
+      message: {
+        err: `trouble fetching user`,
+      },
+    });
+  }
 };
-
-
 
 // check if the user's password matches the one stored in db
 userController.checkPassword = (req, res, next) => {
   try {
-    const matching = false;
-    res.locals.user[password] === req.body.password
+    // console.log('res.locals.user: ', res.locals.user);
+    // console.log(req.body);
+    console.log('res locals pw:', res.locals.user.password);
+    let matching = false;
+    res.locals.user.password === req.body.password
       ? (matching = true)
       : (matching = false);
     res.locals.password = matching;
@@ -128,6 +99,5 @@ userController.checkPassword = (req, res, next) => {
     });
   }
 };
-
 
 module.exports = userController;

@@ -7,6 +7,7 @@ const taskController = {};
 //add the task to the task to table
 //link the userid and the task in the task in the table.
 taskController.createTask = async function (req, res, next) {
+  console.log('entered createTask middleware');
   try {
     // destructuring all info about new task
     // *Note: users will be an array of usernames
@@ -25,8 +26,8 @@ taskController.createTask = async function (req, res, next) {
 
     const values = [name, genre, status, startDate, endDate];
 
-    const addedRow = await db.query(queryString, values, (err, res) => {
-      if (err) {
+    const addedRow = await db.query(queryString, values, (error, result) => {
+      if (error) {
         console.log('failed to create task');
       } else {
         console.log('task created!');
@@ -56,13 +57,14 @@ taskController.createTask = async function (req, res, next) {
       (taskCounter += 2), (userCounter += 2);
     });
 
-    db.query(queryConcatStr, toAddValues, (err, res) => {
-      if (err) {
+    db.query(queryConcatStr, toAddValues, (error, result) => {
+      if (error) {
         console.log('failed to create task with users');
       } else {
         console.log('task with users created!');
       }
     });
+    console.log('leaving createTask middleware')
     return next();
   } catch (err) {
     return next({
@@ -77,6 +79,7 @@ taskController.createTask = async function (req, res, next) {
 // this method assumes each team has uniquely named tasks
 taskController.updateTask = async function (req, res, next) {
   try {
+    console.log('Beginning Update task middleware')
     // destructuring all info about new task
     // *Note: users will be an array of usernames
     const { name, genre, status, startDate, endDate, users } = req.body;
@@ -88,8 +91,8 @@ taskController.updateTask = async function (req, res, next) {
     const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
 
     //find id from this task
-    const queryBigTable = db.query(queryTask, (err, res) => {
-      if (err) {
+    const queryBigTable = db.query(queryTask, (error, result) => {
+      if (error) {
         console.log('failed to retrieve task and board join table');
       } else {
         console.log(`task and board join table retrieved!`);
@@ -111,8 +114,8 @@ taskController.updateTask = async function (req, res, next) {
 
     const values = [name, genre, status, startDate, endDate, taskId[0]];
 
-    db.query(updateTaskQ, values, (err, res) => {
-      if (err) {
+    db.query(updateTaskQ, values, (error, result) => {
+      if (error) {
         console.log('failed to update task');
       } else {
         console.log(`task updated!`);
@@ -129,13 +132,15 @@ taskController.updateTask = async function (req, res, next) {
       (taskCounter += 2), (userCounter += 2);
     });
 
-    db.query(queryConcatStr, toAddValues, (err, res) => {
-      if (err) {
+    db.query(queryConcatStr, toAddValues, (error, result) => {
+      if (error) {
         console.log('failed to update tasks with new users');
       } else {
         console.log('task updated with new users!');
       }
     });
+    console.log('Leaving updateTask middleware')
+    return next();
   } catch (err) {
     return next({
       log: `taskController.updateTask ERROR: ` + err,
@@ -148,6 +153,7 @@ taskController.updateTask = async function (req, res, next) {
 
 // this method assumes each team has uniquely named tasks
 taskController.deleteTask = async function (req, res, next) {
+  console.log('entered delete task middleware')
   try {
     // retrieve task name and teamName
     const { name } = req.body;
@@ -157,8 +163,8 @@ taskController.deleteTask = async function (req, res, next) {
     const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
 
     // make a big table from task table and board table
-    const queryBigTable = db.query(queryTask, (err, res) => {
-      if (err) {
+    const queryBigTable = db.query(queryTask, (error, result) => {
+      if (error) {
         console.log('failed to retrieve task and board join table');
       } else {
         console.log(`task and board join table retrieved!`);
@@ -181,13 +187,14 @@ taskController.deleteTask = async function (req, res, next) {
                              DELETE FROM board WHERE task_id = $1
   `;
 
-    await db.query(queryDeleteString, [taskId[0]], (err, res) => {
-      if (err) {
+    await db.query(queryDeleteString, [taskId[0]], (error, result) => {
+      if (error) {
         console.log('Task was not deleted successfully');
       } else {
         console.log('Task deleted successfully');
       }
     });
+    console.log('leaving delete task middleware')
     return next();
   } catch (err) {
     return next({

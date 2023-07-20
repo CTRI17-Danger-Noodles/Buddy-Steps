@@ -5,6 +5,7 @@ const router = express.Router();
 
 // add new user to user table if they inputted a unique username
 router.post('/create', userController.getUser, userController.createUser, (req, res) => {
+  console.log('Entered user creation')
   res.locals.created === true ? res.sendStatus(200) : res.status(200).json('that username  is already taken!')
   /*
     response 200
@@ -14,7 +15,9 @@ router.post('/create', userController.getUser, userController.createUser, (req, 
 // get user's row from user db
 router.post('/login', userController.getUser, userController.checkPassword, (req, res) => {
   // if the user exists and their password was authenticated, then return the user's info from db
-  if (res.locals.exists && res.locals.password) {
+
+  if (res.locals.exists && res.locals.user) { 
+     console.log('entered user router')
     return res.status(200).json(res.locals.user);
   }
   // otherwise notify user that username or password was incorrect
