@@ -1,19 +1,19 @@
 const path = require('path');
 const db = require('../models/buddyModel');
-
 // controller object holding all methods.
 const taskController = {};
-
 //add the task to the task to table
 //link the userid and the task in the task in the table.
 taskController.createTask = async function (req, res, next) {
   console.log('entered createTask middleware');
   try {
+
     // destructuring all info about new task
     // *Note: users will be an array of usernames
     const { name, status, startDate, endDate } = req.body;
     // teamName provided through req.query
     const teamName = req.query.teamName;
+    console.log('teamName: ', teamName)
 
     //get the genre id,
     //get the status id,
@@ -26,44 +26,41 @@ taskController.createTask = async function (req, res, next) {
 
     const values = [name, genre, status, startDate, endDate];
 
-    const addedRow = await db.query(queryString, values, (error, result) => {
-      if (error) {
-        console.log('failed to create task');
-      } else {
-        console.log('task created!');
-      }
-    });
+    const addedRow = await db.query(queryString, values);
 
-    const taskId = addedRow[0]._id;
-
-    // const queryTask = `SELECT _id FROM task WHERE name=$1`
+    // const queryTask = `SELECT task._id, task.name, board.team_name FROM task INNER JOIN board ON board.task_id = task._id`;
 
     // //find id from this task
-    // const taskId = db.query(queryTask, name, (err, res) => {
-    //   if (err) {
-    //     console.log('failed to retrieve task id')
-    //   } else {
-    //     console.log(`task id received!`)
-    //   }
+    // const queryBigTable = await db.query(queryTask)
+    // console.log('queryBigTable rows: ', queryBigTable.rows)
+    // //filter huge table to only tasks that involve our teamName
+    // const tasksOfTeam = queryBigTable.rows
+    //   .filter((obj) =>  obj.team_name === teamName);
+      
+    // const oneObjTask = tasksOfTeam
+    //   .filter((obj2) => obj2.name === name)
+    // //return the task._id associated with that name
+    // console.log('oneObjTask: ', oneObjTask);
+    // const taskId = oneObjTask[0]._id
+    //  //return the task._id associated with that name
+    // console.log('taskId: ', taskId);
+
+    // const queryTask = `SELECT _id FROM task WHERE `
 
     // in task_user table, add this task_id with each user_id
     let taskCounter = 1;
     let userCounter = 2;
     let queryConcatStr = '';
-    const toAddValues = []; //taskId, halia, taskId, kyle, taskid, rylie
+    const toAddValues = []; 
     users.forEach((el) => {
       queryConcatStr += `INSERT INTO task_user (task_id, user_id) VALUES (${taskCounter}, (SELECT _id FROM users WHERE username = ${userCounter}))`;
       toAddValues.push(...[taskId, el]);
       (taskCounter += 2), (userCounter += 2);
     });
+    console.log('queryConcatStr: ', queryConcatStr);
+    
+    await db.query(queryConcatStr, toAddValues);
 
-    db.query(queryConcatStr, toAddValues, (error, result) => {
-      if (error) {
-        console.log('failed to create task with users');
-      } else {
-        console.log('task with users created!');
-      }
-    });
     console.log('leaving createTask middleware')
     return next();
   } catch (err) {
