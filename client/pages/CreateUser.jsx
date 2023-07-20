@@ -79,10 +79,14 @@ export function CreateUser() {
     },
   ];
 
-  const handleProfileChange = (selectedOption) => {
-    setProfile(selectedOption.value);
-    console.log(profilepic);
-  };
+  
+    const handleProfileChange = (selectedOption) => {
+      console.log(selectedOption.value);
+      setProfile(selectedOption.value);
+      console.log(profilepic);
+    };
+
+
 
   return (
     <div id="login-container">
