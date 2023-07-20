@@ -24,6 +24,14 @@ export function NewTask(props) {
     { label: 'Hobbies' },
     { label: 'Spiritual' },
   ];
+
+// useEffect( () => {
+  function handleGenreSubmit(selectedOption) {
+    setGenre(selectedOption);
+    // console.log(genre);
+  }
+// }, [])
+
   function handleGenreSubmit(selectedOption) {
     setGenre(selectedOption);
     // console.log(genre);

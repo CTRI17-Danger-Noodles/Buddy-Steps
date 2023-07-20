@@ -56,14 +56,14 @@ export function Task(props) {
     // console.log('days: ', days);
   
     let message = `${days} days left`;
-    console.log('message: ', message);
+    // console.log('message: ', message);
   
     return days
   }
 
   const daysLeft = calcDaysLeft(newEndDate, currentDate);
 
-  console.log(typeof daysLeft) 
+  // console.log(typeof daysLeft) 
 
   // console.log('days left is ',daysLeft)
 
@@ -78,7 +78,7 @@ export function Task(props) {
       {/* <div id="end-date">End Date: {formatDate{newEndDate}}</div> */}
       <div id="end-date">End Date:</div>
       {/* <div id="days-left">{daysLeft}</div> */}
-      <div id="days-left">Days Left: {daysLeft}</div>
+      {/* <div id="days-left">Days Left: {daysLeft}</div> */}
       <div id="genre">Genre: {genre}</div>
       <div id="users">Users on Task: {users}</div>
       {/* <progress className="progress-bar" value={progressBarValue} max="100" />

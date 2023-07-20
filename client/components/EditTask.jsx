@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import DatePicker from 'react-datepicker';
 
 export function EditTask(props) {
@@ -26,6 +26,7 @@ export function EditTask(props) {
   const [formData, setFormData] = useState(emptyForm);
   const teamName = localStorage.getItem('teamName');
   
+  const reference = useRef();
 
   //& On rendering the Edit task, need to display current task data
   // useEffect(() => {
@@ -48,6 +49,10 @@ export function EditTask(props) {
     console.log('event', event.target.value);
     // const { name, value } = event.target;
     str += event.target.value;
+    
+  }
+
+  function handleSubmit(event) {
     setBodyObj({
       ...bodyObj,
       oldname: taskData[taskIndex].name,
@@ -56,9 +61,12 @@ export function EditTask(props) {
   }
 
 
+  //useEffect( () => {
 
-  //& Handle request on submit button
-  async function handleSubmit(event) {
+//}, [])
+
+useEffect(() => {
+  async function updateTheTask() {
     // event.preventDefault();
 
     //~ Get form data to send to API
@@ -70,8 +78,6 @@ export function EditTask(props) {
     //   ...bodyObj,
     //   oldname: taskData[taskIndex].name
     // })
-
-
     try {
       //~ Update task by sending patch request to api
       //TODO: check if fields are empty and return error
@@ -99,25 +105,47 @@ export function EditTask(props) {
       console.log('error occured in Edit Task, ', err);
     }
   }
+  updateTheTask();
+  }, [bodyObj])
+  //& Handle request on submit button
+  
 
   // setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
 
-  const statusClickHandler = (e) => {
+  const statusClickHandler = async (e) => {
+    // e.preventDefault();
     console.log('working');
     if (e.target.value === 'todo') {
       e.target.value = 'to do';
     }
-    if (e.target.value === 'inprogress') {
+    else if (e.target.value === 'inprogress') {
       e.target.value = 'in progress';
     }
-    // ...bodyObj
+    else if(e.target.value === 'complete') {
+      e.target.value = 'complete';
+    }
+    console.log('e.target.value', e.target.value)
+
     setBodyObj({
       ...bodyObj,
       oldname: taskData[taskIndex].name,
       status: e.target.value,
     });
-    handleSubmit();
+    // reference.current = bodyObj;
+    // await promisedSetState({
+    //   ...bodyObj,
+    //   oldname: taskData[taskIndex].name,
+    //   status: e.target.value,
+    // });
   };
+  
+  
+  
+
+
+  // const promisedSetState = (newState) => new Promise(resolve => setBodyObj(newState, resolve));
+
+  // await promisedSetState({ someState: true });
 
   //   function beforeSubmit() {
   //   setBodyObj({

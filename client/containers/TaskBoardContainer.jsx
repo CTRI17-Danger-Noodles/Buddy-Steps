@@ -87,7 +87,7 @@ export function TaskBoard(props) {
     } else completeArr.push(taskData[i]);
   }
 
-  completeArr.push({
+  inProgressArr.push({
     enddate: '2023-07-19T21:00:43.013Z',
     startdate: '2023-07-19T21:33:25.774Z',
     taskID: 200,
