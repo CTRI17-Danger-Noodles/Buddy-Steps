@@ -86,7 +86,7 @@ export function NewTask(props) {
           body: JSON.stringify({
             name: formData.taskName,
             status: 'to do',
-            genre: 'fitness',
+            genre: 'Hobbies',
             startDate: currDate,
             endDate: endDate,
             users: [loggedUser],

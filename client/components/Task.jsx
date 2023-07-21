@@ -74,9 +74,9 @@ export function Task(props) {
       </div>
       <hr />
       {/* <div id="start-date">Start Date: {formatDate{StartDate}}</div> */}
-      <div id="start-date">Start Date:</div>
+      {/* <div id="start-date">Start Date:</div> */}
       {/* <div id="end-date">End Date: {formatDate{newEndDate}}</div> */}
-      <div id="end-date">End Date:</div>
+      {/* <div id="end-date">End Date:</div> */}
       {/* <div id="days-left">{daysLeft}</div> */}
       {/* <div id="days-left">Days Left: {daysLeft}</div> */}
       <div id="genre">Genre: {genre}</div>

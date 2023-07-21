@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef} from 'react';
 import DatePicker from 'react-datepicker';
+import { useNavigate } from 'react-router-dom'
 
 export function EditTask(props) {
   const {
@@ -22,6 +23,7 @@ export function EditTask(props) {
     status: null,
     endDate: null,
   });
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState(emptyForm);
   const teamName = localStorage.getItem('teamName');
@@ -101,11 +103,14 @@ useEffect(() => {
 
       //~ close popout
       closeEditPopup();
+
     } catch (err) {
       console.log('error occured in Edit Task, ', err);
     }
   }
   updateTheTask();
+  // location.reload();
+  // navigate('/home');
   }, [bodyObj])
   //& Handle request on submit button
   

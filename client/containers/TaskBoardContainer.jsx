@@ -93,6 +93,8 @@ export function TaskBoard(props) {
     taskID: 200,
     task: 'Give an Awesome Presentation',
     status: 'complete',
+    users: 'Kyle',
+    genre: 'Productivity'
   });
 
   // console.log('completeArr.length: ', completeArr.length)

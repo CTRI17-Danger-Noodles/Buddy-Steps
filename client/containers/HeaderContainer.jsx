@@ -80,9 +80,9 @@ export function HeaderContainer(props) {
         <h1>
           {loggedUser}'s Team Homepage
           <br />
-          Here are your Current Habits:{' '}
+          Welcome to TaskWHAKR
           <br />
-          Let's whack off those tasks!
+          Let's WHAK off those tasks!
         </h1>
         <img
           src={Icon}
